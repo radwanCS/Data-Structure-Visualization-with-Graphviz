@@ -20,12 +20,13 @@ The project currently supports the visualization of Binary Search Trees (BST) an
 To use the visualization tool, follow these steps:
 
 1. Clone the repository:
+```bash
 git clone https://github.com/your-username/data-structure-visualization.git
-
-3. Install the Graphviz library:
+```
+2. Install the Graphviz library:
 Ensure you have Graphviz installed on your system. You can download it from the official Graphviz website (https://graphviz.org/download/).
 
-4. Compile the C code:
+3. Compile the C code:
 Compile the C code using your preferred C compiler. For example:
 ```bash
 gcc -o visualization main.c utility.c bst.c threaded_bst.c -lgvc
@@ -41,9 +42,9 @@ The current version of the project supports the visualization of the following d
 
 1. **Binary Search Tree (BST)**: Visualizes the operations and organization of a binary search tree.
 
-2. **Threaded Binary Tree**: Visualizes a threaded binary tree and its threaded traversal operations.
+2. **Threaded Binary Tree**: Visualizes a one way and two-way threaded binary trees with all of its operations.
 
-Other data structures such as AVL Trees and Red-Black Trees may be included in future updates.
+Other data structures such as AVL Trees and Red-Black Trees and other more complex data structures may be included in future updates.
 
 ## Usage
 Upon running the application, you will be presented with a main menu, providing the following options:
@@ -59,7 +60,7 @@ Upon selecting the "Tree Data Structure" option, you will be presented with the 
 
 1. **Binary Search Tree (BST)**: Visualizes the Binary Search Tree data structure.
 
-2. **Threaded Binary Tree**: Visualizes the Threaded Binary Tree data structure.
+2. **Threaded Binary Tree**: Visualizes the One-way Threaded (Right and Left Threaded binary tree) data structures and two-way threaded binary tree data structures.
 
 3. **AVL Tree**: (Feature not implemented yet)
 
@@ -68,7 +69,7 @@ Upon selecting the "Tree Data Structure" option, you will be presented with the 
 5. **Return to main menu**: Returns to the main menu.
 
 ### Input Validation
-The application performs input validation, ensuring that only valid options are accepted. If an invalid option is entered, the application will prompt for a valid input.
+The application performs input validation, ensuring that only valid options are accepted. If an invalid option is entered, the application will prompt for a valid input or return the user to the previous menu.
 
 ## Dependencies
 The project relies on the Graphviz library for generating graphical representations of data structures. Ensure you have Graphviz installed before running the application.
@@ -80,5 +81,3 @@ Contributions to this project are welcome. If you have ideas for new features, i
 This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute the code according to the terms of the license.
 
 ---
-
-**Note**: The above README file provides an outline of the project's content. You may need to provide additional details and instructions in the actual README file, such as information on building the project, code organization, and more. Additionally, ensure that the license text is included in the project and provide credit to the original authors of the Graphviz library if required.
