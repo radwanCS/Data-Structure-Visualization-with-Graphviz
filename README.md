@@ -20,14 +20,12 @@ The project currently supports the visualization of Binary Search Trees (BST) an
 To use the visualization tool, follow these steps:
 
 1. Clone the repository:
-```bash
 git clone https://github.com/your-username/data-structure-visualization.git
-```
 
-2. Install the Graphviz library:
+3. Install the Graphviz library:
 Ensure you have Graphviz installed on your system. You can download it from the official Graphviz website (https://graphviz.org/download/).
 
-3. Compile the C code:
+4. Compile the C code:
 Compile the C code using your preferred C compiler. For example:
 ```bash
 gcc -o visualization main.c utility.c bst.c threaded_bst.c -lgvc
