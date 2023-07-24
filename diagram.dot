@@ -1,0 +1,23 @@
+digraph RTBT{
+	node [fontname="Arial", shape=record, height=0.5, width=1.5];
+	10 [label="<left> |<data> 10 |<right> "];
+	5 [label="<left> |<data> 5 |<right> "];
+	20 [label="<left> X|<data> 20 |<right> "];
+	2 [label="<left> X|<data> 2 |<right> "];
+	10 [label="<left> |<data> 10 |<right> "];
+	22 [label="<left> X|<data> 22 |<right> X"];
+	NULL1 [shape=point style=invis];
+	2:left -> NULL1 [style=invis];
+	2:right -> 5:data;
+	5:left -> 2:data;
+	5:right -> 10:data;
+	10:left -> 5:data;
+	10:right -> 20:data;
+	NULL2 [shape=point style=invis];
+	20:left -> NULL2 [style=invis];
+	20:right -> 22:data;
+	NULL3 [shape=point style=invis];
+	22:left -> NULL3 [style=invis];
+	NULL4 [shape=point style=invis];
+	22:right -> NULL4 [style=invis];
+}
