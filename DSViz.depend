@@ -21,18 +21,18 @@
 
 1687787800 /media/radwan/d/Projects/DSViz/bst.h
 
-1688925204 source:/media/radwan/d/Projects/Data Structure Viz/bst.c
+1690186597 source:/media/radwan/d/Projects/Data Structure Viz/bst.c
 	<stdio.h>
 	<stdlib.h>
 	<gvc.h>
 	"bst.h"
 	"utility.h"
 
-1688295546 /media/radwan/d/Projects/Data Structure Viz/bst.h
+1690186597 /media/radwan/d/Projects/Data Structure Viz/bst.h
 
-1688912859 /media/radwan/d/Projects/Data Structure Viz/utility.h
+1690186597 /media/radwan/d/Projects/Data Structure Viz/utility.h
 
-1688207524 source:/media/radwan/d/Projects/Data Structure Viz/main.c
+1690186597 source:/media/radwan/d/Projects/Data Structure Viz/main.c
 	<stdio.h>
 	<stdlib.h>
 	<gvc.h>
@@ -41,27 +41,29 @@
 	"bst.h"
 	"threaded_bst.h"
 
-1688913192 source:/media/radwan/d/Projects/Data Structure Viz/utility.c
+1690186597 source:/media/radwan/d/Projects/Data Structure Viz/utility.c
 	"utility.h"
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<sys/stat.h>
 
-1688206586 /media/radwan/d/Projects/Data Structure Viz/threaded_bst.h
+1690186597 /media/radwan/d/Projects/Data Structure Viz/threaded_bst.h
 
-1688290425 source:/media/radwan/d/Projects/Data Structure Viz/threaded_bst.c
+1690207874 source:/media/radwan/d/Projects/Data Structure Viz/threaded_bst.c
 	<stdio.h>
 	"utility.h"
 	"r_threaded_bst.h"
 
-1688290421 /media/radwan/d/Projects/Data Structure Viz/r_threaded_bst.h
+1690186597 /media/radwan/d/Projects/Data Structure Viz/r_threaded_bst.h
 
-1690100090 source:/media/radwan/d/Projects/Data Structure Viz/right_threaded_bst.c
+1690206612 source:/media/radwan/d/Projects/Data Structure Viz/right_threaded_bst.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
 	<sys/stat.h>
 	"utility.h"
+
+1690207839 source:/media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.c
 

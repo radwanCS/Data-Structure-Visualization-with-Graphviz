@@ -246,7 +246,7 @@ struct node *delete_rtt_node(struct node *tree, int val)
     return tree;
 }
 
-struct node *insert_rthreaded_node(struct node *tree, int val)
+struct node *rtt_insert(struct node *tree, int val)
 {
     struct node *ptr = tree;
     struct node *parent = NULL;
@@ -638,7 +638,7 @@ void start_rthreaded_tree_program()
         case 1:
             printf("\n Enter element to insert: ");
             scanf( " %d", &val);
-            tree = insert_rthreaded_node(tree, val);
+            tree = rtt_insert(tree, val);
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
