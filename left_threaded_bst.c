@@ -71,43 +71,131 @@ struct node *ltt_insert(struct node *tree, int val)
     return tree;
 };
 
-void print_rtt_helper(struct node *tree, FILE *dotFile, int *null_id)
+struct node *ltt_leftMost(struct node *n)
+{
+    if(n == NULL)
+    {
+        return NULL;
+    }
+    while(n->leftThread == false)
+    {
+        n = n->left;
+    }
+    return n;
+};
+
+int ltt_height(struct node *node)
+{
+    if(node == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        int rheight = ltt_height(node->right);
+        int lheight;
+
+        if(node->leftThread)
+        {
+            lheight = 0;
+        }
+        else
+        {
+            lheight = ltt_height(node->left);
+        }
+
+        if(lheight > rheight)
+        {
+            return (lheight + 1);
+        }
+        else
+        {
+            return (rheight + 1);
+        }
+    }
+}
+
+void write_current_level_ltt_nodes(struct node *tree, int level, FILE *dotFile)
+{
+    if(tree == NULL)
+    {
+        return;
+    }
+    if(level == 1)
+    {
+        // Write the current node
+        if (tree->left && tree->right)
+        {
+            fprintf(dotFile, "\t%d [label=\"<left> |<data> %d |<right> \"];\n", tree->data, tree->data);
+        }
+        else if (tree->left && !tree->right)
+        {
+            fprintf(dotFile, "\t%d [label=\"<left> |<data> %d |<right> X\"];\n", tree->data, tree->data);
+        }
+        else if (!tree->left && tree->right)
+        {
+            fprintf(dotFile, "\t%d [label=\"<left> X|<data> %d |<right> \"];\n", tree->data, tree->data);
+        }
+        else
+        {
+            fprintf(dotFile, "\t%d [label=\"<left> X|<data> %d |<right> X\"];\n", tree->data, tree->data);
+        }
+    }
+    else if(level > 1)
+    {
+        write_current_level_ltt_nodes(tree->left, level - 1, dotFile);
+        write_current_level_ltt_nodes(tree->right, level - 1, dotFile);
+    }
+}
+
+void generate_ltt_nodes(struct node *tree, FILE *dotFile)
+{
+    int h = ltt_height(tree);
+    int i;
+    for(i = 1; i <= h; i++)
+    {
+        write_current_level_ltt_nodes(tree, i, dotFile);
+    }
+}
+
+
+void print_ltt_helper(struct node *tree, FILE *dotFile, int *null_id)
 {
     // Recursively using Preorder traversal write the DOT representation of each node in the tree
 
-    struct node *ptr = rtt_leftMost(tree);
-    while(ptr != NULL)
+    if(tree == NULL)
     {
-        if(ptr->left)
-        {
-            fprintf(dotFile, "\t%d:left -> %d:data;\n", ptr->data, ptr->left->data);
-        }
-        else
-        {
-            (*null_id)++;
-            fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
-            fprintf(dotFile, "\t%d:left -> NULL%d [style=invis];\n", ptr->data, *null_id);
-        }
+        return;
+    }
 
-        if(ptr->right)
-        {
-            fprintf(dotFile, "\t%d:right -> %d:data;\n", ptr->data, ptr->right->data);
-        }
-        else
-        {
-            (*null_id)++;
-            fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
-            fprintf(dotFile, "\t%d:right -> NULL%d [style=invis];\n", ptr->data, *null_id);
-        }
-
-        if(ptr->rightThread)
-        {
-            ptr = ptr->right;
-        }
-        else
-        {
-            ptr = rtt_leftMost(ptr->right);
-        }
+    if(tree->left)
+    {
+        fprintf(dotFile, "\t%d:left -> %d:data;\n", tree->data, tree->left->data);
+    }
+    else
+    {
+        (*null_id)++;
+        fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
+        fprintf(dotFile, "\t%d:left -> NULL%d [style=invis];\n", tree->data, *null_id);
+    }
+    if(tree->right)
+    {
+        fprintf(dotFile, "\t%d:right -> %d:data;\n", tree->data, tree->right->data);
+    }
+    else
+    {
+        (*null_id)++;
+        fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
+        fprintf(dotFile, "\t%d:right -> NULL%d [style=invis];\n", tree->data, *null_id);
+    }
+    if(tree->leftThread)
+    {
+        print_ltt_helper(tree->right, dotFile, null_id);
+    }
+    else
+    {
+        print_ltt_helper(tree->left, dotFile, null_id);
+        print_ltt_helper(tree->right, dotFile, null_id);
     }
 }
 
@@ -191,7 +279,7 @@ void start_left_threaded_tree_program()
 {
     int option, val;
     struct node *tree = NULL;
-    struct node *ptr;
+    //struct node *ptr;
 
     do
     {

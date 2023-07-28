@@ -2,6 +2,7 @@
 
 #include "utility.h"
 #include "r_threaded_bst.h"
+#include "left_threaded_bst.h"
 
 void threaded_tree_menu()
 {
@@ -23,6 +24,7 @@ void threaded_tree_menu()
             start_rthreaded_tree_program();
             break;
         case 2:
+            start_left_threaded_tree_program();
             break;
         case 3:
             break;
