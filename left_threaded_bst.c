@@ -14,6 +14,72 @@ struct node
     bool leftThread;
 };
 
+int ltt_total_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        if(tree->leftThread == true)
+        {
+            return ltt_total_nodes(tree->right) + 1;
+        }
+        else
+        {
+            return ltt_total_nodes(tree->left) + ltt_total_nodes(tree->right) + 1;
+        }
+    }
+}
+
+int ltt_total_external_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else if(tree->right == NULL && tree->leftThread == true)
+    {
+        return 1;
+    }
+    else
+    {
+        if(tree->leftThread == true)
+        {
+            return ltt_total_external_nodes(tree->right);
+        }
+        else
+        {
+            return ltt_total_external_nodes(tree->left) + ltt_total_external_nodes(tree->right);
+        }
+    }
+}
+
+int ltt_total_internal_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else if(tree->right == NULL && tree->leftThread == true)
+    {
+        return 0;
+    }
+    else
+    {
+        if(tree->leftThread == true)
+        {
+            return ltt_total_internal_nodes(tree->right) + 1;
+        }
+        else
+        {
+            return ltt_total_internal_nodes(tree->left) + ltt_total_internal_nodes(tree->right) + 1;
+        }
+    }
+}
+
+
 struct node *ltt_minValue(struct node *ptr)
 {
     struct node *current = ptr;
@@ -594,6 +660,63 @@ void start_left_threaded_tree_program()
             else
             {
                 printf("\n Tree is empty hence its height is 0");
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
+            break;
+        case 5:
+            val = ltt_total_nodes(tree);
+            if(val)
+            {
+                printf("\n Tree has total of %d nodes", val);
+            }
+            else
+            {
+                printf("\n Tree is empty hence has 0 nodes");
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
+            break;
+        case 6:
+            val = ltt_total_external_nodes(tree);
+            if(val)
+            {
+                printf("\n Tree has total of %d external nodes", val);
+            }
+            else
+            {
+                printf("\n Tree is empty hence has 0 external nodes");
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
+            break;
+        case 7:
+            val = ltt_total_internal_nodes(tree);
+            if(val)
+            {
+                printf("\n Tree has total of %d internal nodes", val);
+            }
+            else
+            {
+                printf("\n Tree is empty hence has 0 internal nodes");
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
+            break;
+        case 8:
+            if(tree == NULL)
+            {
+                printf("\n The tree is empty");
+            }
+            else
+            {
+                printf("\n Elements in inorder traversal: ");
+                ltt_inorder_traversal(tree);
+                printf("\n ");
             }
             printf("\n\n Press enter to continue...");
             getchar();
