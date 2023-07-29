@@ -10,14 +10,6 @@
 
 1690186597 /media/radwan/d/Projects/Data Structure Viz/utility.h
 
-1690612447 source:/media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<stdbool.h>
-	<sys/stat.h>
-	"utility.h"
-
 1690186597 source:/media/radwan/d/Projects/Data Structure Viz/main.c
 	<stdio.h>
 	<stdlib.h>
@@ -53,4 +45,12 @@
 	<stdio.h>
 	<string.h>
 	<sys/stat.h>
+
+1690640094 source:/media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<sys/stat.h>
+	"utility.h"
 

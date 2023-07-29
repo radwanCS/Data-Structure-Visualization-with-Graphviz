@@ -14,6 +14,213 @@ struct node
     bool leftThread;
 };
 
+struct node *ltt_minValue(struct node *ptr)
+{
+    struct node *current = ptr;
+
+    while(current->leftThread != true)
+    {
+        current = current->left;
+    }
+    return current;
+};
+
+struct node *ltt_inorderSuccessor(struct node *tree, struct node *ptr)
+{
+    //Option 1 if right node is not null go to the right subtree and return the minimum key value
+    if(ptr->right != NULL)
+    {
+        return ltt_minValue(ptr->right);
+    }
+
+    //Option 2 start from the root node and search for successor down the tree
+    struct node *succ = NULL;
+    while(tree != NULL)
+    {
+        if(ptr->data < tree->data)
+        {
+            succ = tree;
+            tree = tree->left;
+        }
+        else if(ptr->data > tree->data)
+        {
+            tree = tree->right;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return succ;
+};
+
+struct node *ltt_inorderPred(struct node *ptr)
+{
+    if(ptr->leftThread == true)
+    {
+        return ptr->left;
+    }
+    ptr = ptr->left;
+    while(ptr->right != NULL)
+    {
+        ptr = ptr->right;
+    }
+    return ptr;
+};
+
+struct node *ltt_delete_caseA(struct node *tree, struct node *parent, struct node *ptr)
+{
+    if(parent == NULL)
+    {
+        tree = NULL;
+    }
+    else if(ptr == parent->right)
+    {
+        parent->right = ptr->right;
+    }
+    else
+    {
+        parent->leftThread = true;
+        parent->left = ptr->left;
+    }
+    free(ptr);
+    return tree;
+};
+
+
+struct node *ltt_delete_caseB(struct node *tree, struct node *parent, struct node *ptr)
+{
+    struct node *child;
+    struct node *s = ltt_inorderSuccessor(tree, ptr);
+    struct node *p = ltt_inorderPred(ptr);
+
+    if(ptr->leftThread == false)
+    {
+        child = ptr->left;
+    }
+    else
+    {
+        child = ptr->right;
+    }
+
+    if(parent == NULL)
+    {
+        tree = child;
+    }
+    else if(ptr == parent->left)
+    {
+        parent->left = child;
+    }
+    else
+    {
+        parent->right = child;
+    }
+
+    if(ptr->leftThread == false)
+    {
+        p->right = NULL;
+    }
+    else
+    {
+        if(ptr->right != NULL)
+        {
+            s->left = p;
+        }
+    }
+    free(ptr);
+    return tree;
+};
+
+
+struct node *ltt_delete_caseC(struct node *tree, struct node *parent, struct node *ptr)
+{
+    struct node *parsucc = ptr;
+    struct node *succ = ptr->right;
+
+    // Find left most child of successor
+    while(succ->leftThread == false)
+    {
+        parsucc = succ;
+        succ = succ->left;
+    }
+
+    ptr->data = succ->data;
+
+    if(succ->right == NULL && succ->leftThread == true)
+    {
+        tree = ltt_delete_caseA(tree, parsucc, succ);
+    }
+    else
+    {
+        tree = ltt_delete_caseB(tree, parsucc, succ);
+    }
+    return tree;
+
+};
+
+
+struct node *delete_ltt_node(struct node *tree, int val)
+{
+    struct node *parent = NULL;
+    struct node *ptr = tree;
+    bool found = false;
+
+    while(ptr != NULL)
+    {
+        if(val == ptr->data)
+        {
+            found = true;
+            break;
+        }
+        parent = ptr;
+        if(val > ptr->data)
+        {
+            if(ptr->right != NULL)
+            {
+                ptr = ptr->right;
+            }
+            else
+            {
+                break;
+            }
+        }
+        else
+        {
+            if(ptr->leftThread == false)
+            {
+                ptr = ptr->left;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    if(found == false)
+    {
+        printf(" value not present in tree\n");
+    }
+    else if(ptr->right != NULL && ptr->leftThread == false)
+    {
+        tree = ltt_delete_caseC(tree, parent, ptr);
+    }
+    else if(ptr->right != NULL && ptr->leftThread == true)
+    {
+        tree = ltt_delete_caseB(tree, parent, ptr);
+    }
+    else if(ptr->right == NULL && ptr->leftThread == false)
+    {
+        tree = ltt_delete_caseB(tree, parent, ptr);
+    }
+    else
+    {
+        tree = ltt_delete_caseA(tree, parent, ptr);
+    }
+    return tree;
+}
+
+
 struct node *ltt_search(struct node *tree, int val)
 {
     if(tree == NULL)
@@ -361,6 +568,22 @@ void start_left_threaded_tree_program()
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n'); // wait for user to press enter
+            break;
+        case 3:
+            printf("\n Enter element to delete: ");
+            scanf(" %d", &val);
+            if(tree == NULL)
+            {
+                printf("\n Tree is empty");
+            }
+            else
+            {
+                tree = delete_ltt_node(tree, val);
+            }
+            printf("\n Element have been deleted");
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
             break;
         case 4:
             val = ltt_height(tree);
