@@ -28,15 +28,25 @@ struct node *rtt_search(struct node *tree, int val)
     {
         if(tree->rightThread)
         {
-            return NULL;
-        }
-        else if(val < tree->data)
-        {
-            return rtt_search(tree->left, val);
+            if(val > tree->data)
+            {
+                return NULL;
+            }
+            else
+            {
+                return rtt_search(tree->left, val);
+            }
         }
         else
         {
-            return rtt_search(tree->right, val);
+            if(val > tree->data)
+            {
+                return rtt_search(tree->right, val);
+            }
+            else
+            {
+                return rtt_search(tree->left, val);
+            }
         }
     }
 };

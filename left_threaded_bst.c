@@ -14,6 +14,44 @@ struct node
     bool leftThread;
 };
 
+struct node *ltt_search(struct node *tree, int val)
+{
+    if(tree == NULL)
+    {
+        return NULL;
+    }
+    else if(tree->data == val)
+    {
+        return tree;
+    }
+    else
+    {
+        if(tree->leftThread)
+        {
+            if(val > tree->data)
+            {
+                return ltt_search(tree->right, val);
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+        else
+        {
+            if(val > tree->data)
+            {
+                return ltt_search(tree->right, val);
+
+            }
+            else
+            {
+                return ltt_search(tree->left, val);
+            }
+        }
+    }
+};
+
 struct node *ltt_insert(struct node *tree, int val)
 {
     struct node *ptr = tree;
@@ -158,7 +196,6 @@ void generate_ltt_nodes(struct node *tree, FILE *dotFile)
     }
 }
 
-
 void print_ltt_helper(struct node *tree, FILE *dotFile, int *null_id)
 {
     // Recursively using Preorder traversal write the DOT representation of each node in the tree
@@ -279,7 +316,7 @@ void start_left_threaded_tree_program()
 {
     int option, val;
     struct node *tree = NULL;
-    //struct node *ptr;
+    struct node *ptr;
 
     do
     {
@@ -305,6 +342,36 @@ void start_left_threaded_tree_program()
             printf("\n Enter element to insert: ");
             scanf(" %d", &val);
             tree = ltt_insert(tree, val);
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
+            break;
+        case 2:
+            printf("\n Enter the value to search for: ");
+            scanf(" %d", &val);
+            ptr = ltt_search(tree, val);
+            if(ptr == NULL)
+            {
+                printf("\n Element doesn't exist in the BST");
+            }
+            else
+            {
+                printf("\n Element is found");
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n'); // wait for user to press enter
+            break;
+        case 4:
+            val = ltt_height(tree);
+            if(val)
+            {
+                printf("\n Tree height is: %d", val);
+            }
+            else
+            {
+                printf("\n Tree is empty hence its height is 0");
+            }
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
