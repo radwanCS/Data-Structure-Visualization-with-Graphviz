@@ -325,6 +325,24 @@ struct node *ltt_search(struct node *tree, int val)
     }
 };
 
+void ltt_inorder_traversal(struct node *tree)
+{
+    if(tree != NULL)
+    {
+        if(tree->leftThread)
+        {
+            printf("%d ", tree->data);
+            ltt_inorder_traversal(tree->right);
+        }
+        else
+        {
+            ltt_inorder_traversal(tree->left);
+            printf("%d ", tree->data);
+            ltt_inorder_traversal(tree->right);
+        }
+    }
+};
+
 struct node *ltt_insert(struct node *tree, int val)
 {
     struct node *ptr = tree;
@@ -714,7 +732,7 @@ void start_left_threaded_tree_program()
             }
             else
             {
-                printf("\n Elements in inorder traversal: ");
+                printf("\n Elements in Inorder traversal: ");
                 ltt_inorder_traversal(tree);
                 printf("\n ");
             }

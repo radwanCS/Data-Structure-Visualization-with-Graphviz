@@ -2,9 +2,10 @@ digraph LTBT{
 	node [fontname="Arial", shape=record, height=0.5, width=1.5];
 	20 [label="<left> |<data> 20 |<right> "];
 	10 [label="<left> |<data> 10 |<right> X"];
-	30 [label="<left> |<data> 30 |<right> X"];
+	30 [label="<left> |<data> 30 |<right> "];
 	5 [label="<left> X|<data> 5 |<right> X"];
 	20 [label="<left> |<data> 20 |<right> "];
+	50 [label="<left> |<data> 50 |<right> X"];
 	20:left -> 10:data;
 	20:right -> 30:data;
 	10:left -> 5:data;
@@ -15,6 +16,8 @@ digraph LTBT{
 	NULL3 [shape=point style=invis];
 	5:right -> NULL3 [style=invis];
 	30:left -> 20:data;
+	30:right -> 50:data;
+	50:left -> 30:data;
 	NULL4 [shape=point style=invis];
-	30:right -> NULL4 [style=invis];
+	50:right -> NULL4 [style=invis];
 }
