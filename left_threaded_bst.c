@@ -343,6 +343,26 @@ void ltt_inorder_traversal(struct node *tree)
     }
 };
 
+struct node *ltt_delete_tree(struct node *tree)
+{
+    if(tree != NULL)
+    {
+        if(tree->leftThread)
+        {
+            ltt_delete_tree(tree->right);
+            free(tree);
+        }
+        else
+        {
+            ltt_delete_tree(tree->left);
+            ltt_delete_tree(tree->right);
+            free(tree);
+        }
+    }
+    return NULL;
+}
+
+
 struct node *ltt_insert(struct node *tree, int val)
 {
     struct node *ptr = tree;
@@ -750,6 +770,20 @@ void start_left_threaded_tree_program()
         case 10:
             save_ltt(tree);
             printf("\n\n Press enter to continue...");
+            while (getchar() != '\n');
+            break;
+        case 11:
+            tree = ltt_delete_tree(tree);
+            if(tree == NULL)
+            {
+                printf("\n Tree has been deleted successfully");
+            }
+            else
+            {
+                printf("\n Unable to delete tree for some reason");
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
             while (getchar() != '\n');
             break;
         default:
