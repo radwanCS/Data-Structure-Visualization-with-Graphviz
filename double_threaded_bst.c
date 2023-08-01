@@ -9,360 +9,49 @@
 struct node
 {
     int data;
-    struct node *left;
     struct node *right;
+    struct node *left;
+    bool rightThread;
     bool leftThread;
 };
 
-int ltt_total_nodes(struct node *tree)
+struct node *dtt_search(struct node *tree, int val)
 {
-    if(tree == NULL)
-    {
-        return 0;
-    }
-    else
-    {
-        if(tree->leftThread == true)
-        {
-            return ltt_total_nodes(tree->right) + 1;
-        }
-        else
-        {
-            return ltt_total_nodes(tree->left) + ltt_total_nodes(tree->right) + 1;
-        }
-    }
-}
-
-int ltt_total_external_nodes(struct node *tree)
-{
-    if(tree == NULL)
-    {
-        return 0;
-    }
-    else if(tree->right == NULL && tree->leftThread == true)
-    {
-        return 1;
-    }
-    else
-    {
-        if(tree->leftThread == true)
-        {
-            return ltt_total_external_nodes(tree->right);
-        }
-        else
-        {
-            return ltt_total_external_nodes(tree->left) + ltt_total_external_nodes(tree->right);
-        }
-    }
-}
-
-int ltt_total_internal_nodes(struct node *tree)
-{
-    if(tree == NULL)
-    {
-        return 0;
-    }
-    else if(tree->right == NULL && tree->leftThread == true)
-    {
-        return 0;
-    }
-    else
-    {
-        if(tree->leftThread == true)
-        {
-            return ltt_total_internal_nodes(tree->right) + 1;
-        }
-        else
-        {
-            return ltt_total_internal_nodes(tree->left) + ltt_total_internal_nodes(tree->right) + 1;
-        }
-    }
-}
-
-
-struct node *ltt_minValue(struct node *ptr)
-{
-    struct node *current = ptr;
-
-    while(current->leftThread != true)
-    {
-        current = current->left;
-    }
-    return current;
-};
-
-struct node *ltt_inorderSuccessor(struct node *tree, struct node *ptr)
-{
-    //Option 1 if right node is not null go to the right subtree and return the minimum key value
-    if(ptr->right != NULL)
-    {
-        return ltt_minValue(ptr->right);
-    }
-
-    //Option 2 start from the root node and search for successor down the tree
-    struct node *succ = NULL;
-    while(tree != NULL)
-    {
-        if(ptr->data < tree->data)
-        {
-            succ = tree;
-            tree = tree->left;
-        }
-        else if(ptr->data > tree->data)
-        {
-            tree = tree->right;
-        }
-        else
-        {
-            break;
-        }
-    }
-    return succ;
-};
-
-struct node *ltt_inorderPred(struct node *ptr)
-{
-    if(ptr->leftThread == true)
-    {
-        return ptr->left;
-    }
-    ptr = ptr->left;
-    while(ptr->right != NULL)
-    {
-        ptr = ptr->right;
-    }
-    return ptr;
-};
-
-struct node *ltt_delete_caseA(struct node *tree, struct node *parent, struct node *ptr)
-{
-    if(parent == NULL)
-    {
-        tree = NULL;
-    }
-    else if(ptr == parent->right)
-    {
-        parent->right = ptr->right;
-    }
-    else
-    {
-        parent->leftThread = true;
-        parent->left = ptr->left;
-    }
-    free(ptr);
-    return tree;
-};
-
-
-struct node *ltt_delete_caseB(struct node *tree, struct node *parent, struct node *ptr)
-{
-    struct node *child;
-    struct node *s = ltt_inorderSuccessor(tree, ptr);
-    struct node *p = ltt_inorderPred(ptr);
-
-    if(ptr->leftThread == false)
-    {
-        child = ptr->left;
-    }
-    else
-    {
-        child = ptr->right;
-    }
-
-    if(parent == NULL)
-    {
-        tree = child;
-    }
-    else if(ptr == parent->left)
-    {
-        parent->left = child;
-    }
-    else
-    {
-        parent->right = child;
-    }
-
-    if(ptr->leftThread == false)
-    {
-        p->right = NULL;
-    }
-    else
-    {
-        if(ptr->right != NULL)
-        {
-            s->left = p;
-        }
-    }
-    free(ptr);
-    return tree;
-};
-
-
-struct node *ltt_delete_caseC(struct node *tree, struct node *parent, struct node *ptr)
-{
-    struct node *parsucc = ptr;
-    struct node *succ = ptr->right;
-
-    // Find left most child of successor
-    while(succ->leftThread == false)
-    {
-        parsucc = succ;
-        succ = succ->left;
-    }
-
-    ptr->data = succ->data;
-
-    if(succ->right == NULL && succ->leftThread == true)
-    {
-        tree = ltt_delete_caseA(tree, parsucc, succ);
-    }
-    else
-    {
-        tree = ltt_delete_caseB(tree, parsucc, succ);
-    }
-    return tree;
-
-};
-
-
-struct node *delete_ltt_node(struct node *tree, int val)
-{
-    struct node *parent = NULL;
-    struct node *ptr = tree;
-    bool found = false;
-
-    while(ptr != NULL)
-    {
-        if(val == ptr->data)
-        {
-            found = true;
-            break;
-        }
-        parent = ptr;
-        if(val > ptr->data)
-        {
-            if(ptr->right != NULL)
-            {
-                ptr = ptr->right;
-            }
-            else
-            {
-                break;
-            }
-        }
-        else
-        {
-            if(ptr->leftThread == false)
-            {
-                ptr = ptr->left;
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-
-    if(found == false)
-    {
-        printf(" value not present in tree\n");
-    }
-    else if(ptr->right != NULL && ptr->leftThread == false)
-    {
-        tree = ltt_delete_caseC(tree, parent, ptr);
-    }
-    else if(ptr->right != NULL && ptr->leftThread == true)
-    {
-        tree = ltt_delete_caseB(tree, parent, ptr);
-    }
-    else if(ptr->right == NULL && ptr->leftThread == false)
-    {
-        tree = ltt_delete_caseB(tree, parent, ptr);
-    }
-    else
-    {
-        tree = ltt_delete_caseA(tree, parent, ptr);
-    }
-    return tree;
-}
-
-
-struct node *ltt_search(struct node *tree, int val)
-{
-    if(tree == NULL)
-    {
-        return NULL;
-    }
-    else if(tree->data == val)
+    if(tree == NULL || tree->data == val)
     {
         return tree;
     }
+    else if(val < tree->data)
+    {
+        if(tree->leftThread)
+        {
+            return NULL;
+        }
+        else
+        {
+            return dtt_search(tree->left, val);
+        }
+    }
     else
     {
-        if(tree->leftThread)
+        if(tree->rightThread)
         {
-            if(val > tree->data)
-            {
-                return ltt_search(tree->right, val);
-            }
-            else
-            {
-                return NULL;
-            }
+            return NULL;
         }
         else
         {
-            if(val > tree->data)
-            {
-                return ltt_search(tree->right, val);
-
-            }
-            else
-            {
-                return ltt_search(tree->left, val);
-            }
+            return dtt_search(tree->right, val);
         }
     }
 };
 
-void ltt_inorder_traversal(struct node *tree)
+struct node *delete_dtt_node(struct node *tree, int val)
 {
-    if(tree != NULL)
-    {
-        if(tree->leftThread)
-        {
-            printf("%d ", tree->data);
-            ltt_inorder_traversal(tree->right);
-        }
-        else
-        {
-            ltt_inorder_traversal(tree->left);
-            printf("%d ", tree->data);
-            ltt_inorder_traversal(tree->right);
-        }
-    }
-};
 
-struct node *ltt_delete_tree(struct node *tree)
-{
-    if(tree != NULL)
-    {
-        if(tree->leftThread)
-        {
-            ltt_delete_tree(tree->right);
-            free(tree);
-        }
-        else
-        {
-            ltt_delete_tree(tree->left);
-            ltt_delete_tree(tree->right);
-            free(tree);
-        }
-    }
-    return NULL;
+    return tree;
 }
 
-struct node *ltt_insert(struct node *tree, int val)
+struct node *dtt_insert(struct node *tree, int val)
 {
     struct node *ptr = tree;
     struct node *parent = NULL;
@@ -375,7 +64,6 @@ struct node *ltt_insert(struct node *tree, int val)
             return tree;
         }
         parent = ptr;
-
         if(val < ptr->data)
         {
             if(ptr->leftThread == false)
@@ -389,37 +77,46 @@ struct node *ltt_insert(struct node *tree, int val)
         }
         else
         {
-            ptr = ptr->right;
+            if(ptr->rightThread == false)
+            {
+                ptr = ptr->right;
+            }
+            else
+            {
+                break;
+            }
         }
     }
 
-    struct node *new_node;
-    new_node = (struct node *)malloc(sizeof(struct node));
+    struct node *new_node = (struct node *)malloc(sizeof(struct node));
     new_node->data = val;
-    new_node->left = new_node->right = NULL;
     new_node->leftThread = true;
+    new_node->rightThread = true;
 
     if(parent == NULL)
     {
         tree = new_node;
-        tree->left = NULL;
-        tree->right = NULL;
+        new_node->left = NULL;
+        new_node->right = NULL;
     }
     else if(val < parent->data)
     {
         new_node->left = parent->left;
+        new_node->right = parent;
         parent->leftThread = false;
         parent->left = new_node;
     }
     else
     {
         new_node->left = parent;
+        new_node->right = parent->right;
+        parent->rightThread = false;
         parent->right = new_node;
     }
     return tree;
 };
 
-struct node *ltt_leftMost(struct node *n)
+struct node *dtt_leftMost(struct node *n)
 {
     if(n == NULL)
     {
@@ -432,7 +129,7 @@ struct node *ltt_leftMost(struct node *n)
     return n;
 };
 
-int ltt_height(struct node *node)
+int dtt_height(struct node *node)
 {
     if(node == NULL)
     {
@@ -440,8 +137,8 @@ int ltt_height(struct node *node)
     }
     else
     {
-        int rheight = ltt_height(node->right);
         int lheight;
+        int rheight;
 
         if(node->leftThread)
         {
@@ -449,7 +146,16 @@ int ltt_height(struct node *node)
         }
         else
         {
-            lheight = ltt_height(node->left);
+            lheight = dtt_height(node->left);
+        }
+
+        if(node->rightThread)
+        {
+            rheight = 0;
+        }
+        else
+        {
+            rheight = dtt_height(node->right);
         }
 
         if(lheight > rheight)
@@ -463,7 +169,7 @@ int ltt_height(struct node *node)
     }
 }
 
-void write_current_level_ltt_nodes(struct node *tree, int level, FILE *dotFile)
+void write_current_level_dtt_nodes(struct node *tree, int level, FILE *dotFile)
 {
     if(tree == NULL)
     {
@@ -491,62 +197,61 @@ void write_current_level_ltt_nodes(struct node *tree, int level, FILE *dotFile)
     }
     else if(level > 1)
     {
-        write_current_level_ltt_nodes(tree->left, level - 1, dotFile);
-        write_current_level_ltt_nodes(tree->right, level - 1, dotFile);
+        write_current_level_dtt_nodes(tree->left, level - 1, dotFile);
+        write_current_level_dtt_nodes(tree->right, level - 1, dotFile);
     }
 }
 
-void generate_ltt_nodes(struct node *tree, FILE *dotFile)
+void generate_dtt_nodes(struct node *tree, FILE *dotFile)
 {
-    int h = ltt_height(tree);
+    int h = dtt_height(tree);
     int i;
     for(i = 1; i <= h; i++)
     {
-        write_current_level_ltt_nodes(tree, i, dotFile);
+        write_current_level_dtt_nodes(tree, i, dotFile);
     }
 }
 
-void print_ltt_helper(struct node *tree, FILE *dotFile, int *null_id)
+void print_dtt_helper(struct node *tree, FILE *dotFile, int *null_id)
 {
     // Recursively using Preorder traversal write the DOT representation of each node in the tree
+    struct node *ptr = dtt_leftMost(tree);
+    while(ptr != NULL)
+    {
+        if(ptr->left)
+        {
+            fprintf(dotFile, "\t%d:left -> %d:data;\n", ptr->data, ptr->left->data);
+        }
+        else
+        {
+            (*null_id)++;
+            fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
+            fprintf(dotFile, "\t%d:left -> NULL%d [style=invis];\n", ptr->data, *null_id);
+        }
 
-    if(tree == NULL)
-    {
-        return;
-    }
+        if(ptr->right)
+        {
+            fprintf(dotFile, "\t%d:right -> %d:data;\n", ptr->data, ptr->right->data);
+        }
+        else
+        {
+            (*null_id)++;
+            fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
+            fprintf(dotFile, "\t%d:right -> NULL%d [style=invis];\n", ptr->data, *null_id);
+        }
 
-    if(tree->left)
-    {
-        fprintf(dotFile, "\t%d:left -> %d:data;\n", tree->data, tree->left->data);
-    }
-    else
-    {
-        (*null_id)++;
-        fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
-        fprintf(dotFile, "\t%d:left -> NULL%d [style=invis];\n", tree->data, *null_id);
-    }
-    if(tree->right)
-    {
-        fprintf(dotFile, "\t%d:right -> %d:data;\n", tree->data, tree->right->data);
-    }
-    else
-    {
-        (*null_id)++;
-        fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
-        fprintf(dotFile, "\t%d:right -> NULL%d [style=invis];\n", tree->data, *null_id);
-    }
-    if(tree->leftThread)
-    {
-        print_ltt_helper(tree->right, dotFile, null_id);
-    }
-    else
-    {
-        print_ltt_helper(tree->left, dotFile, null_id);
-        print_ltt_helper(tree->right, dotFile, null_id);
+        if(ptr->rightThread)
+        {
+            ptr = ptr->right;
+        }
+        else
+        {
+            ptr = dtt_leftMost(ptr->right);
+        }
     }
 }
 
-void print_ltt(struct node *tree)
+void print_dtt(struct node *tree)
 {
     static int null_id;
 
@@ -573,8 +278,8 @@ void print_ltt(struct node *tree)
     else
     {
         null_id = 0;
-        generate_ltt_nodes(tree, dotFile);
-        print_ltt_helper(tree, dotFile, &null_id);
+        generate_dtt_nodes(tree, dotFile);
+        print_dtt_helper(tree, dotFile, &null_id);
     }
 
     // Write the DOT file footer
@@ -585,7 +290,7 @@ void print_ltt(struct node *tree)
     view_diagram();
 }
 
-void save_ltt(struct node *tree)
+void save_dtt(struct node *tree)
 {
     static int null_id;
     FILE *dotFile = fopen("diagram.dot", "w"); // Open a file to write the DOT representation of the tree
@@ -611,8 +316,8 @@ void save_ltt(struct node *tree)
     else
     {
         null_id = 0;
-        generate_ltt_nodes(tree, dotFile);
-        print_ltt_helper(tree, dotFile, &null_id);
+        generate_dtt_nodes(tree, dotFile);
+        print_dtt_helper(tree, dotFile, &null_id);
     }
     // Write the DOT file footer
     fprintf(dotFile, "}\n");
@@ -622,7 +327,8 @@ void save_ltt(struct node *tree)
     save_diagram();
 }
 
-void start_left_threaded_tree_program()
+
+void start_double_threaded_bst_program()
 {
     int option, val;
     struct node *tree = NULL;
@@ -651,7 +357,7 @@ void start_left_threaded_tree_program()
         case 1:
             printf("\n Enter element to insert: ");
             scanf(" %d", &val);
-            tree = ltt_insert(tree, val);
+            tree = dtt_insert(tree, val);
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
@@ -659,7 +365,7 @@ void start_left_threaded_tree_program()
         case 2:
             printf("\n Enter the value to search for: ");
             scanf(" %d", &val);
-            ptr = ltt_search(tree, val);
+            ptr = dtt_search(tree, val);
             if(ptr == NULL)
             {
                 printf("\n Element doesn't exist in the BST");
@@ -681,15 +387,16 @@ void start_left_threaded_tree_program()
             }
             else
             {
-                tree = delete_ltt_node(tree, val);
+                tree = delete_dtt_node(tree, val);
             }
             printf("\n Element have been deleted");
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
             break;
+        /*
         case 4:
-            val = ltt_height(tree);
+            val = dtt_height(tree);
             if(val)
             {
                 printf("\n Tree height is: %d", val);
@@ -703,7 +410,7 @@ void start_left_threaded_tree_program()
             while (getchar() != '\n');
             break;
         case 5:
-            val = ltt_total_nodes(tree);
+            val = dtt_total_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d nodes", val);
@@ -717,7 +424,7 @@ void start_left_threaded_tree_program()
             while (getchar() != '\n');
             break;
         case 6:
-            val = ltt_total_external_nodes(tree);
+            val = dtt_total_external_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d external nodes", val);
@@ -731,7 +438,7 @@ void start_left_threaded_tree_program()
             while (getchar() != '\n');
             break;
         case 7:
-            val = ltt_total_internal_nodes(tree);
+            val = dtt_total_internal_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d internal nodes", val);
@@ -752,27 +459,29 @@ void start_left_threaded_tree_program()
             else
             {
                 printf("\n Elements in Inorder traversal: ");
-                ltt_inorder_traversal(tree);
+                dtt_inorder_traversal(tree);
                 printf("\n ");
             }
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
             break;
+            */
         case 9:
             printf("\n Opening image with the default image viewer");
-            print_ltt(tree);
+            print_dtt(tree);
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
             break;
         case 10:
-            save_ltt(tree);
+            save_dtt(tree);
             printf("\n\n Press enter to continue...");
             while (getchar() != '\n');
             break;
+        /*
         case 11:
-            tree = ltt_delete_tree(tree);
+            tree = dtt_delete_tree(tree);
             if(tree == NULL)
             {
                 printf("\n Tree has been deleted successfully");
@@ -785,6 +494,7 @@ void start_left_threaded_tree_program()
             getchar();
             while (getchar() != '\n');
             break;
+            */
         default:
             printf("\n Returning to threaded tree menu...\n");
             option = 12;

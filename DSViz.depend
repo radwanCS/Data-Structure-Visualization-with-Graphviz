@@ -29,11 +29,12 @@
 	<sys/stat.h>
 	"utility.h"
 
-1690552428 source:/media/radwan/d/Projects/Data Structure Viz/threaded_bst.c
+1690877798 source:/media/radwan/d/Projects/Data Structure Viz/threaded_bst.c
 	<stdio.h>
 	"utility.h"
 	"r_threaded_bst.h"
 	"left_threaded_bst.h"
+	"double_threaded_bst.h"
 
 1690186597 /media/radwan/d/Projects/Data Structure Viz/r_threaded_bst.h
 
@@ -46,7 +47,17 @@
 	<string.h>
 	<sys/stat.h>
 
-1690788371 source:/media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.c
+1690789135 source:/media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<sys/stat.h>
+	"utility.h"
+
+1690877805 /media/radwan/d/Projects/Data Structure Viz/double_threaded_bst.h
+
+1690910310 source:/media/radwan/d/Projects/Data Structure Viz/double_threaded_bst.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
