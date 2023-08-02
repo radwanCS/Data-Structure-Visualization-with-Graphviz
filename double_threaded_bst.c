@@ -45,9 +45,180 @@ struct node *dtt_search(struct node *tree, int val)
     }
 };
 
+struct node *dtt_insucc(struct node *ptr)
+{
+    if(ptr->rightThread == true)
+    {
+        return ptr->right;
+    }
+    ptr = ptr->right;
+    while(ptr->leftThread == false)
+    {
+        ptr = ptr->left;
+    }
+    return ptr;
+};
+
+struct node *dtt_inpred(struct node *ptr)
+{
+    if(ptr->leftThread == true)
+    {
+        return ptr->left;
+    }
+    ptr = ptr->left;
+    while(ptr->rightThread == false)
+    {
+        ptr = ptr->right;
+    }
+    return ptr;
+};
+
+
+struct node *dtt_delete_caseA(struct node *tree, struct node *parent, struct node *ptr)
+{
+    if(parent == NULL)
+    {
+        tree = NULL;
+    }
+    else if(ptr == parent->left)
+    {
+        parent->leftThread = true;
+        parent->left = ptr->left;
+    }
+    else
+    {
+        parent->rightThread = true;
+        parent->right = ptr->right;
+    }
+    free(ptr);
+    return tree;
+};
+
+struct node *dtt_delete_caseB(struct node *tree, struct node *parent, struct node *ptr)
+{
+    struct node *child;
+    if(ptr->leftThread == false)
+    {
+        child = ptr->left;
+    }
+    else
+    {
+        child = ptr->right;
+    }
+
+    if(parent == NULL)
+    {
+        tree = child;
+    }
+    else if(ptr == parent->left)
+    {
+        parent->left = child;
+    }
+    else
+    {
+        parent->right = child;
+    }
+
+    struct node *s = dtt_insucc(ptr);
+    struct node *p = dtt_inpred(ptr);
+
+    if(ptr->leftThread == false)
+    {
+        p->right = s;
+    }
+    else
+    {
+        if(ptr->rightThread == false)
+        {
+            s->left = p;
+        }
+    }
+    free(ptr);
+    return tree;
+};
+
+struct node *dtt_delete_caseC(struct node *tree, struct node *parent, struct node *ptr)
+{
+    struct node *parsucc = ptr;
+    struct node *succ = ptr->right;
+
+    while(succ->leftThread == false)
+    {
+        parsucc = succ;
+        succ = succ->left;
+    }
+    ptr->data = succ->data;
+    if(succ->leftThread == true && succ->rightThread == true)
+    {
+        tree = dtt_delete_caseA(tree, parsucc, succ);
+    }
+    else
+    {
+        tree = dtt_delete_caseB(tree, parsucc, succ);
+    }
+    return tree;
+};
+
 struct node *delete_dtt_node(struct node *tree, int val)
 {
+    struct node *parent;
+    struct node *ptr = tree;
 
+    int found = 0;
+
+    while(ptr != NULL)
+    {
+        if(val == ptr->data)
+        {
+            found = 1;
+            break;
+        }
+        parent = ptr;
+
+        if(val < ptr->data)
+        {
+            if(ptr->leftThread == false)
+            {
+                ptr = ptr->left;
+            }
+            else
+            {
+                break;
+            }
+        }
+        else
+        {
+            if(ptr->rightThread == false)
+            {
+                ptr = ptr->right;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    if(found == 0)
+    {
+        printf("Value not present in the tree \n");
+    }
+    else if(ptr->leftThread == false && ptr->rightThread == false)
+    {
+        tree = dtt_delete_caseC(tree, parent, ptr);
+    }
+    else if(ptr->leftThread == false)
+    {
+        tree = dtt_delete_caseB(tree, parent, ptr);
+    }
+    else if(ptr->rightThread == false)
+    {
+        tree = dtt_delete_caseB(tree, parent, ptr);
+    }
+    else
+    {
+        tree = dtt_delete_caseA(tree, parent, ptr);
+    }
     return tree;
 }
 

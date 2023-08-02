@@ -35,6 +35,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="bst.h" />
+		<Unit filename="double_threaded_bst.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="double_threaded_bst.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="left_threaded_bst.c">
 			<Option compilerVar="CC" />
 		</Unit>
