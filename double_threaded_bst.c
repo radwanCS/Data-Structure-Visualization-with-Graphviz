@@ -45,6 +45,87 @@ struct node *dtt_search(struct node *tree, int val)
     }
 };
 
+int dtt_total_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        if(tree->rightThread == true && tree->leftThread == true)
+        {
+            return 1;
+        }
+        else if(tree->leftThread == true && tree->rightThread == false)
+        {
+            return dtt_total_nodes(tree->right) + 1;
+        }
+        else if(tree->rightThread == true && tree->leftThread == false)
+        {
+            return dtt_total_nodes(tree->left) + 1;
+        }
+        else
+        {
+            return dtt_total_nodes(tree->left) + dtt_total_nodes(tree->right) + 1;
+        }
+    }
+}
+
+int dtt_total_external_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else if(tree->rightThread == true && tree->leftThread == true)
+    {
+        return 1;
+    }
+    else
+    {
+        if(tree->rightThread)
+        {
+            return dtt_total_external_nodes(tree->left);
+        }
+        else if(tree->leftThread == true)
+        {
+            return dtt_total_external_nodes(tree->right);
+        }
+        else
+        {
+            return dtt_total_external_nodes(tree->left) + dtt_total_external_nodes(tree->right);
+        }
+    }
+}
+
+int dtt_total_internal_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else if(tree->leftThread == true && tree->rightThread == true)
+    {
+        return 0;
+    }
+    else
+    {
+        if(tree->leftThread == true)
+        {
+            return dtt_total_internal_nodes(tree->right) + 1;
+        }
+        else if(tree->rightThread == true)
+        {
+            return dtt_total_internal_nodes(tree->left) + 1;
+        }
+        else
+        {
+            return dtt_total_internal_nodes(tree->left) + dtt_total_internal_nodes(tree->right) + 1;
+        }
+    }
+}
+
 struct node *dtt_insucc(struct node *ptr)
 {
     if(ptr->rightThread == true)
@@ -565,7 +646,6 @@ void start_double_threaded_bst_program()
             getchar();
             while (getchar() != '\n');
             break;
-        /*
         case 4:
             val = dtt_height(tree);
             if(val)
@@ -616,12 +696,13 @@ void start_double_threaded_bst_program()
             }
             else
             {
-                printf("\n Tree is empty hence has 0 internal nodes");
+                printf("\n Tree is empty or has single node hence has 0 internal nodes");
             }
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
             break;
+        /*
         case 8:
             if(tree == NULL)
             {
