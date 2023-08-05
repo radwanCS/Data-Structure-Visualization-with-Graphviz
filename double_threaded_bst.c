@@ -398,6 +398,27 @@ void dtt_inorder_traversal(struct node *tree)
     }
 }
 
+struct node *dtt_delete_tree(struct node *tree)
+{
+    struct node *ptr = dtt_leftMost(tree);
+    struct node *prev;
+    while(ptr != NULL)
+    {
+        prev = ptr;
+        if(ptr->rightThread)
+        {
+            ptr = ptr->right;
+        }
+        else
+        {
+            ptr = dtt_leftMost(ptr->right);
+        }
+        free(prev);
+    }
+    tree = NULL;
+    return tree;
+};
+
 int dtt_height(struct node *node)
 {
     if(node == NULL)
@@ -746,7 +767,6 @@ void start_double_threaded_bst_program()
             printf("\n\n Press enter to continue...");
             while (getchar() != '\n');
             break;
-        /*
         case 11:
             tree = dtt_delete_tree(tree);
             if(tree == NULL)
@@ -761,7 +781,6 @@ void start_double_threaded_bst_program()
             getchar();
             while (getchar() != '\n');
             break;
-            */
         default:
             printf("\n Returning to threaded tree menu...\n");
             option = 12;
