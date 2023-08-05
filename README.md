@@ -56,6 +56,9 @@ Upon running the application, you will be presented with a main menu, providing 
 3. **EXIT**: Exits the program.
 
 ### Tree Data Structure Visualization
+
+![Example Tree Menu](screenshot/Tree_menu.png)
+
 Upon selecting the "Tree Data Structure" option, you will be presented with the Tree Visualization menu, where you can choose from the available tree data structures:
 
 1. **Binary Search Tree (BST)**: Visualizes the Binary Search Tree data structure.
