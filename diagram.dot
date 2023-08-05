@@ -1,4 +1,35 @@
 digraph LTBT{
 	node [fontname="Arial", shape=record, height=0.5, width=1.5];
-
+	20 [label="<left> |<data> 20 |<right> "];
+	10 [label="<left> |<data> 10 |<right> "];
+	30 [label="<left> |<data> 30 |<right> "];
+	5 [label="<left> |<data> 5 |<right> "];
+	20 [label="<left> |<data> 20 |<right> "];
+	25 [label="<left> |<data> 25 |<right> "];
+	35 [label="<left> |<data> 35 |<right> X"];
+	2 [label="<left> X|<data> 2 |<right> "];
+	8 [label="<left> |<data> 8 |<right> "];
+	10 [label="<left> |<data> 10 |<right> "];
+	30 [label="<left> |<data> 30 |<right> "];
+	20 [label="<left> |<data> 20 |<right> "];
+	30 [label="<left> |<data> 30 |<right> "];
+	30 [label="<left> |<data> 30 |<right> "];
+	NULL1 [shape=point style=invis];
+	2:left -> NULL1 [style=invis];
+	2:right -> 5:data;
+	5:left -> 2:data;
+	5:right -> 8:data;
+	8:left -> 5:data;
+	8:right -> 10:data;
+	10:left -> 5:data;
+	10:right -> 20:data;
+	20:left -> 10:data;
+	20:right -> 30:data;
+	25:left -> 20:data;
+	25:right -> 30:data;
+	30:left -> 25:data;
+	30:right -> 35:data;
+	35:left -> 30:data;
+	NULL2 [shape=point style=invis];
+	35:right -> NULL2 [style=invis];
 }
