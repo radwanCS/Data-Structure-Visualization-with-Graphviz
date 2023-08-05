@@ -381,6 +381,23 @@ struct node *dtt_leftMost(struct node *n)
     return n;
 };
 
+void dtt_inorder_traversal(struct node *tree)
+{
+    struct node *ptr = dtt_leftMost(tree);
+    while(ptr != NULL)
+    {
+        printf("%d ", ptr->data);
+        if(ptr->rightThread)
+        {
+            ptr = ptr->right;
+        }
+        else
+        {
+            ptr = dtt_leftMost(ptr->right);
+        }
+    }
+}
+
 int dtt_height(struct node *node)
 {
     if(node == NULL)
@@ -702,7 +719,6 @@ void start_double_threaded_bst_program()
             getchar();
             while (getchar() != '\n');
             break;
-        /*
         case 8:
             if(tree == NULL)
             {
@@ -718,7 +734,6 @@ void start_double_threaded_bst_program()
             getchar();
             while (getchar() != '\n');
             break;
-            */
         case 9:
             printf("\n Opening image with the default image viewer");
             print_dtt(tree);
