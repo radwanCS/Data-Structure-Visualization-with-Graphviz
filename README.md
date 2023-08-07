@@ -63,9 +63,15 @@ Upon selecting the "Tree Data Structure" option, you will be presented with the 
 
 1. **Binary Search Tree (BST)**: Visualizes the Binary Search Tree data structure.
 
+![Example Tree Menu](screenshot/bst.png)
+
 2. **Threaded Binary Tree**: Visualizes the One-way Threaded (Right and Left Threaded binary tree) data structures and two-way threaded binary tree data structures.
 
+![Example Tree Menu](screenshot/threaded_tree.png)
+
 3. **AVL Tree**: Visualizes AVL tree data structure with all insert, delete, search and more operations implemented correctly.
+
+![Example Tree Menu](screenshot/avl_tree.png)
 
 4. **Red-Black Tree**: (Feature not implemented yet)
 
