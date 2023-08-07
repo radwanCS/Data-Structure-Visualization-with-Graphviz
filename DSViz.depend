@@ -1,5 +1,12 @@
 # depslib dependency file v1.0
-1690186597 source:/media/radwan/d/Projects/Data Structure Viz/bst.c
+1691396953 source:/media/radwan/d/Projects/Data Structure Viz/avl_tree.c
+	<stdio.h>
+	<stdlib.h>
+	"utility.h"
+
+1691379970 /media/radwan/d/Projects/Data Structure Viz/utility.h
+
+1691331549 source:/media/radwan/d/Projects/Data Structure Viz/bst.c
 	<stdio.h>
 	<stdlib.h>
 	<gvc.h>
@@ -8,18 +15,34 @@
 
 1690186597 /media/radwan/d/Projects/Data Structure Viz/bst.h
 
-1690186597 /media/radwan/d/Projects/Data Structure Viz/utility.h
-
-1690186597 source:/media/radwan/d/Projects/Data Structure Viz/main.c
+1691217671 source:/media/radwan/d/Projects/Data Structure Viz/double_threaded_bst.c
 	<stdio.h>
 	<stdlib.h>
-	<gvc.h>
+	<string.h>
+	<stdbool.h>
+	<sys/stat.h>
+	"utility.h"
+
+1690789135 source:/media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<sys/stat.h>
+	"utility.h"
+
+1691312889 source:/media/radwan/d/Projects/Data Structure Viz/main.c
+	<stdio.h>
+	<stdlib.h>
 	<ctype.h>
 	"utility.h"
 	"bst.h"
 	"threaded_bst.h"
+	"avl_tree.h"
 
 1690186597 /media/radwan/d/Projects/Data Structure Viz/threaded_bst.h
+
+1691312848 /media/radwan/d/Projects/Data Structure Viz/avl_tree.h
 
 1690610696 source:/media/radwan/d/Projects/Data Structure Viz/right_threaded_bst.c
 	<stdio.h>
@@ -40,28 +63,12 @@
 
 1690552412 /media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.h
 
-1690186597 source:/media/radwan/d/Projects/Data Structure Viz/utility.c
-	"utility.h"
-	<stdlib.h>
-	<stdio.h>
-	<string.h>
-	<sys/stat.h>
-
-1690789135 source:/media/radwan/d/Projects/Data Structure Viz/left_threaded_bst.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<stdbool.h>
-	<sys/stat.h>
-	"utility.h"
-
 1690877805 /media/radwan/d/Projects/Data Structure Viz/double_threaded_bst.h
 
-1691217671 source:/media/radwan/d/Projects/Data Structure Viz/double_threaded_bst.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<stdbool.h>
-	<sys/stat.h>
+1691379970 source:/media/radwan/d/Projects/Data Structure Viz/utility.c
 	"utility.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<sys/stat.h>
 

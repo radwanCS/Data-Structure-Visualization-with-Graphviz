@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <gvc.h>
 #include <ctype.h>
 
 #include "utility.h"
 #include "bst.h"
 #include "threaded_bst.h"
+#include "avl_tree.h"
 
 void mainMenu()
 {
@@ -42,6 +42,7 @@ void treeMenu()
             threaded_tree_menu();
             break;
         case 3:
+            start_avl_tree_program();
             break;
         case 4:
             break;
