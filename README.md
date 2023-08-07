@@ -65,7 +65,7 @@ Upon selecting the "Tree Data Structure" option, you will be presented with the 
 
 2. **Threaded Binary Tree**: Visualizes the One-way Threaded (Right and Left Threaded binary tree) data structures and two-way threaded binary tree data structures.
 
-3. **AVL Tree**: (Feature not implemented yet)
+3. **AVL Tree**: Visualizes AVL tree data structure with all insert, delete, search and more operations implemented correctly.
 
 4. **Red-Black Tree**: (Feature not implemented yet)
 
