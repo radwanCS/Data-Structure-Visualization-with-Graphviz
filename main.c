@@ -45,6 +45,7 @@ void treeMenu()
             start_avl_tree_program();
             break;
         case 4:
+            start_redBlackTree_program();
             break;
         case 5:
             option = 5;

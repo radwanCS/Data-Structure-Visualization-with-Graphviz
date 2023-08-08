@@ -6,7 +6,7 @@
 
 1691379970 /media/radwan/d/Projects/Data Structure Viz/utility.h
 
-1691331549 source:/media/radwan/d/Projects/Data Structure Viz/bst.c
+1691432763 source:/media/radwan/d/Projects/Data Structure Viz/bst.c
 	<stdio.h>
 	<stdlib.h>
 	<gvc.h>
@@ -31,7 +31,7 @@
 	<sys/stat.h>
 	"utility.h"
 
-1691312889 source:/media/radwan/d/Projects/Data Structure Viz/main.c
+1691426978 source:/media/radwan/d/Projects/Data Structure Viz/main.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
@@ -71,4 +71,9 @@
 	<stdio.h>
 	<string.h>
 	<sys/stat.h>
+
+1691499435 source:/media/radwan/d/Projects/Data Structure Viz/red_black_tree.c
+	<stdio.h>
+	<stdlib.h>
+	"utility.h"
 

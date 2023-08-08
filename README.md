@@ -73,7 +73,9 @@ Upon selecting the "Tree Data Structure" option, you will be presented with the 
 
 ![Example Tree Menu](screenshot/avl_tree.png)
 
-4. **Red-Black Tree**: (Feature not implemented yet)
+4. **Red-Black Tree**: Visualizes Red black tree data structure with all insert, delete, and search functions.
+
+![Example Tree Menu](screenshot/red_black_tree.png)
 
 5. **Return to main menu**: Returns to the main menu.
 

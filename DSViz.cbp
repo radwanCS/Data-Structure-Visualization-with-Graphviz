@@ -59,6 +59,12 @@
 		<Unit filename="r_threaded_bst.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="red_black_tree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="red_black_tree.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="right_threaded_bst.c">
 			<Option compilerVar="CC" />
 		</Unit>
