@@ -31,53 +31,59 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="avl_tree.c">
+		<Unit filename="dataStructures/Trees/avl_tree.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="avl_tree.h">
+		<Unit filename="headers/avl_tree.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="bst.c">
+		<Unit filename="dataStructures/Trees/bst.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="bst.h" />
-		<Unit filename="double_threaded_bst.c">
+		<Unit filename="headers/bst.h" />
+		<Unit filename="dataStructures/Trees/double_threaded_bst.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="double_threaded_bst.h">
+		<Unit filename="headers/double_threaded_bst.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="left_threaded_bst.c">
+		<Unit filename="dataStructures/Trees/left_threaded_bst.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="left_threaded_bst.h">
+		<Unit filename="headers/left_threaded_bst.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="r_threaded_bst.h">
+		<Unit filename="headers/r_threaded_bst.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="red_black_tree.c">
+		<Unit filename="dataStructures/Trees/red_black_tree.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="red_black_tree.h">
+		<Unit filename="headers/red_black_tree.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="right_threaded_bst.c">
+		<Unit filename="dataStructures/Trees/right_threaded_bst.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="threaded_bst.c">
+		<Unit filename="dataStructures/Trees/splay_tree.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="threaded_bst.h">
+		<Unit filename="headers/splay_tree.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="dataStructures/Trees/threaded_bst.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="headers/threaded_bst.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="utility.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="utility.h" />
+		<Unit filename="headers/utility.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

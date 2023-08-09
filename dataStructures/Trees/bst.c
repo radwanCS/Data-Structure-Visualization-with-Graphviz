@@ -1,272 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <gvc.h>
 
-#include "utility.h"
+#include "../../headers/utility.h"
 
 struct node
 {
     int data;
     struct node *left;
     struct node *right;
-    int height;
 };
 
-int avl_tree_height(struct node *root)
+struct node *delete_tree(struct node *tree)
 {
-    int left_height, right_height;
-    if(root == NULL)
-    {
-        return 0;
-    }
-    if(root->left == NULL)
-    {
-        left_height = 0;
-    }
-    else
-    {
-        left_height = 1 + root->left->height;
-    }
-    if(root->right == NULL)
-    {
-        right_height = 0;
-    }
-    else
-    {
-        right_height = 1 + root->right->height;
-    }
-    if(left_height > right_height)
-    {
-        return (left_height);
-    }
-    return (right_height);
-}
-
-struct node *avl_rightRotate(struct node *root)
-{
-    struct node *left_child = root->left;
-    root->left = left_child->right;
-    left_child->right = root;
-    root->height = avl_tree_height(root);
-    left_child->height = avl_tree_height(left_child);
-    return left_child;
-};
-
-struct node *avl_leftRotate(struct node *root)
-{
-    struct node *right_child = root->right;
-    root->right = right_child->left;
-    right_child->left = root;
-
-    root->height = avl_tree_height(root);
-    right_child->height = avl_tree_height(right_child);
-    return right_child;
-};
-
-int avl_node_Balance(struct node *root)
-{
-    int left_height, right_height;
-
-    if(root == NULL)
-    {
-        return 0;
-    }
-    if(root->left == NULL)
-    {
-        left_height = 0;
-    }
-    else
-    {
-        left_height = 1 + root->left->height;
-    }
-    if(root->right == NULL)
-    {
-        right_height = 0;
-    }
-    else
-    {
-        right_height = 1 + root->right->height;
-    }
-    return left_height - right_height;
-}
-
-struct node *create_avl_node(int val)
-{
-    struct node *new_node = (struct node *)malloc(sizeof(struct node));
-    if(new_node == NULL)
-    {
-        printf("\n Memory can't be allocated\n");
-    }
-    new_node->data = val;
-    new_node->left = NULL;
-    new_node->right = NULL;
-    return new_node;
-};
-
-struct node *avl_insert(struct node *tree, int  val)
-{
-    if(tree == NULL)
-    {
-        struct node *new_node = create_avl_node(val);
-        if(new_node == NULL)
-        {
-            return NULL;
-        }
-        tree = new_node;
-    }
-    else if(val > tree->data)
-    {
-        tree->right = avl_insert(tree->right, val);
-        if(avl_node_Balance(tree) < -1)
-        {
-            if(val > tree->right->data)
-            {
-                tree = avl_leftRotate(tree);
-            }
-            else
-            {
-                tree->right = avl_rightRotate(tree->right);
-                tree = avl_leftRotate(tree);
-            }
-        }
-    }
-    else if(val < tree->data)
-    {
-        tree->left = avl_insert(tree->left, val);
-        if(avl_node_Balance(tree) > 1)
-        {
-            if(val < tree->left->data)
-            {
-                tree = avl_rightRotate(tree);
-            }
-            else
-            {
-                tree->left = avl_leftRotate(tree->left);
-                tree = avl_rightRotate(tree);
-            }
-        }
-    }
-    else
-    {
-        printf("\n Duplicate key!");
-        return tree;
-    }
-    tree->height = avl_tree_height(tree);
-    return tree;
-};
-
-struct node *avl_delete_node(struct node *tree, int val)
-{
-    struct node *temp = NULL;
-
-    if(tree == NULL)
-    {
-        return NULL;
-    }
-
-    if(val > tree->data)
-    {
-        tree->right = avl_delete_node(tree->right, val);
-        if(avl_node_Balance(tree) > 1)
-        {
-            if(avl_node_Balance(tree->left) >= 0)
-            {
-                tree = avl_rightRotate(tree);
-            }
-            else
-            {
-                tree->left = avl_leftRotate(tree->left);
-                tree = avl_rightRotate(tree);
-            }
-        }
-    }
-    else if(val < tree->data)
-    {
-        tree->left = avl_delete_node(tree->left, val);
-        if(avl_node_Balance(tree) < -1)
-        {
-            if(avl_node_Balance(tree->right) <= 0)
-            {
-                tree = avl_leftRotate(tree);
-            }
-            else
-            {
-                tree->right = avl_rightRotate(tree->right);
-                tree = avl_leftRotate(tree);
-            }
-        }
-    }
-    else
-    {
-        if(tree->right != NULL)
-        {
-            temp = tree->right;
-            while(temp->left != NULL)
-            {
-                temp = temp->left;
-            }
-            tree->data = temp->data;
-            tree->right = avl_delete_node(tree->right, temp->data);
-            if(avl_node_Balance(tree) > 1)
-            {
-                if(avl_node_Balance(tree->left) >= 0)
-                {
-                    tree = avl_rightRotate(tree);
-                }
-                else
-                {
-                    tree->left = avl_leftRotate(tree->left);
-                    tree = avl_rightRotate(tree);
-                }
-            }
-        }
-        else
-        {
-            return (tree->left);
-        }
-    }
-    tree->height = avl_tree_height(tree);
-    return tree;
-};
-
-struct node *avl_mirror_image(struct node *tree)
-{
-    struct node *temp;
     if(tree != NULL)
     {
-        avl_mirror_image(tree->left);
-        avl_mirror_image(tree->right);
-        temp = tree->left;
-        tree->left = tree->right;
-        tree->right = temp;
+        delete_tree(tree->left);
+        delete_tree(tree->right);
+        free(tree);
     }
     return tree;
-};
+}
 
-struct node *avl_findSmallestNode(struct node *tree)
-{
-    if(tree == NULL || tree->left == NULL)
-    {
-        return tree;
-    }
-    else
-    {
-        return avl_findSmallestNode(tree->left);
-    }
-};
-
-struct node *avl_findLargestNode(struct node *tree)
-{
-    if(tree == NULL || tree->right == NULL)
-    {
-        return tree;
-    }
-    else
-    {
-        return avl_findLargestNode(tree->right);
-    }
-};
-
-int avl_total_nodes(struct node *tree)
+int total_nodes(struct node *tree)
 {
     if(tree == NULL)
     {
@@ -274,11 +30,11 @@ int avl_total_nodes(struct node *tree)
     }
     else
     {
-        return avl_total_nodes(tree->left) + avl_total_nodes(tree->right) + 1;
+        return total_nodes(tree->left) + total_nodes(tree->right) + 1;
     }
 };
 
-int avl_total_external_nodes(struct node *tree)
+int total_external_nodes(struct node *tree)
 {
     if(tree == NULL)
     {
@@ -290,11 +46,11 @@ int avl_total_external_nodes(struct node *tree)
     }
     else
     {
-        return avl_total_external_nodes(tree->left) + avl_total_external_nodes(tree->right);
+        return total_external_nodes(tree->left) + total_external_nodes(tree->right);
     }
 }
 
-int avl_total_internal_nodes(struct node *tree)
+int total_internal_nodes(struct node *tree)
 {
     if(tree == NULL)
     {
@@ -306,22 +62,112 @@ int avl_total_internal_nodes(struct node *tree)
     }
     else
     {
-        return avl_total_internal_nodes(tree->left) + avl_total_internal_nodes(tree->right) + 1;
+        return total_internal_nodes(tree->left) + total_internal_nodes(tree->right) + 1;
     }
 }
 
-struct node *avl_delete_tree(struct node *tree)
+int heigth(struct node *tree)
 {
+    int left_heigth, right_heigth;
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        left_heigth = heigth(tree->left);
+        right_heigth = heigth(tree->right);
+        if(left_heigth > right_heigth)
+        {
+            return left_heigth + 1;
+        }
+        else
+        {
+            return right_heigth + 1;
+        }
+    }
+}
+
+struct node *mirror_image(struct node *tree)
+{
+    struct node *temp;
     if(tree != NULL)
     {
-        avl_delete_tree(tree->left);
-        avl_delete_tree(tree->right);
-        free(tree);
+        mirror_image(tree->left);
+        mirror_image(tree->right);
+        temp = tree->left;
+        tree->left = tree->right;
+        tree->right = temp;
     }
     return tree;
-}
+};
 
-struct  node *avl_search(struct node *tree, int val)
+struct node *findSmallestNode(struct node *tree)
+{
+    if(tree == NULL || tree->left == NULL)
+    {
+        return tree;
+    }
+    else
+    {
+        return findSmallestNode(tree->left);
+    }
+};
+
+struct node *findLargestNode(struct node *tree)
+{
+    if(tree == NULL || tree->right == NULL)
+    {
+        return tree;
+    }
+    else
+    {
+        return findLargestNode(tree->right);
+    }
+};
+
+struct node *delete_node(struct node *tree, int val)
+{
+    struct node *temp;
+    if(tree == NULL)
+    {
+        printf("\n There is no such value");
+    }
+    else if(val < tree->data)
+    {
+        tree->left = delete_node(tree->left, val);
+    }
+    else if(val > tree->data)
+    {
+        tree->right = delete_node(tree->right, val);
+    }
+    else if(tree->left && tree->right)
+    {
+        temp = findLargestNode(tree->left);
+        tree->data = temp->data;
+        tree->left = delete_node(tree->left, temp->data);
+    }
+    else
+    {
+        temp = tree;
+        if(tree->left == NULL && tree->right == NULL)
+        {
+            tree = NULL;
+        }
+        else if(tree->left != NULL)
+        {
+            tree = tree->left;
+        }
+        else
+        {
+            tree = tree->right;
+        }
+        free(temp);
+    }
+    return tree;
+};
+
+struct node *search(struct node *tree, int val)
 {
     if(tree == NULL)
     {
@@ -335,80 +181,97 @@ struct  node *avl_search(struct node *tree, int val)
     {
         if(val < tree->data)
         {
-            return avl_search(tree->left, val);
+            return search(tree->left, val);
         }
         else
         {
-            return avl_search(tree->right, val);
+            return search(tree->right, val);
         }
     }
 };
 
-void avl_preorder_traversal(struct node *root)
-{
-    if(root != NULL)
-    {
-        printf("%d ", root->data);
-        avl_preorder_traversal(root->left);
-        avl_preorder_traversal(root->right);
-    }
-}
-
-void avl_inorder_traversal(struct node *tree)
+struct node *insert(struct node *tree, int val)
 {
     if(tree == NULL)
     {
-        return;
+        tree = (struct node *)malloc(sizeof(struct node));
+        tree->data = val;
+        tree->left = tree->right = NULL;
     }
-
-    avl_inorder_traversal(tree->left);
-    printf("%d ", tree->data);
-    avl_inorder_traversal(tree->right);
-}
-
-void avl_postorder_traversal(struct node *tree)
-{
-    if(tree == NULL)
+    else
     {
-        return;
+        if(val < tree->data)
+        {
+            tree->left = insert(tree->left, val);
+        }
+        else
+        {
+            tree->right = insert(tree->right, val);
+        }
     }
-    avl_postorder_traversal(tree->left);
-    avl_postorder_traversal(tree->right);
-    printf("%d ", tree->data);
+    return tree;
+};
+
+
+void preorder_traversal(struct node *tree)
+{
+    if(tree != NULL)
+    {
+        printf(" %d", tree->data);
+        preorder_traversal(tree->left);
+        preorder_traversal(tree->right);
+    }
 }
 
-void print_avlTree_helper(struct node *tree, FILE *dotFile, int *null_id)
+void inorder_traversal(struct node *tree)
 {
-    // Recursively using preorder traversal write the DOT representation of each node in the tree
+    if(tree != NULL)
+    {
+        inorder_traversal(tree->left);
+        printf(" %d", tree->data);
+        inorder_traversal(tree->right);
+    }
+}
+
+void postorder_traversal(struct node *tree)
+{
+    if(tree != NULL)
+    {
+        postorder_traversal(tree->left);
+        postorder_traversal(tree->right);
+        printf(" %d", tree->data);
+    }
+}
+
+void print_bst_helper(struct node *tree, FILE *dotFile, int *null_id)
+{
+    // Recursively using inorder traversal write the DOT representation of each node in the tree
     if(tree->left)
     {
-        fprintf(dotFile, "\t%d [xlabel=\"%d\"];\n", tree->data, avl_node_Balance(tree));
         fprintf(dotFile, "\t%d -> %d;\n", tree->data, tree->left->data);
-        print_avlTree_helper(tree->left, dotFile, null_id);
+        print_bst_helper(tree->left, dotFile, null_id);
     }
     else
     {
         (*null_id)++;
-        fprintf(dotFile, "\t%d [xlabel=\"%d\"];\n", tree->data, avl_node_Balance(tree));
-        fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
-        fprintf(dotFile, "\t%d -> NULL%d [style=invis];\n", tree->data, *null_id);
+        fprintf(dotFile, "\tNULL%d [shape=point];\n", *null_id);
+        fprintf(dotFile, "\t%d -> NULL%d;\n", tree->data, *null_id);
     }
+
     if(tree->right)
     {
-        fprintf(dotFile, "\t%d [xlabel=\"%d\"];\n", tree->data, avl_node_Balance(tree));
         fprintf(dotFile, "\t%d -> %d;\n", tree->data, tree->right->data);
-        print_avlTree_helper(tree->right, dotFile, null_id);
+        print_bst_helper(tree->right, dotFile, null_id);
     }
     else
     {
         (*null_id)++;
-        fprintf(dotFile, "\t%d [xlabel=\"%d\"];\n", tree->data, avl_node_Balance(tree));
-        fprintf(dotFile, "\tNULL%d [shape=point style=invis];\n", *null_id);
-        fprintf(dotFile, "\t%d -> NULL%d [style=invis];\n", tree->data, *null_id);
+        fprintf(dotFile, "\tNULL%d [shape=point];\n", *null_id);
+        fprintf(dotFile, "\t%d -> NULL%d;\n", tree->data, *null_id);
     }
 }
 
-void print_avlTree(struct node *tree)
+void print_bst(struct node *tree)
 {
 
     static int null_id;
@@ -431,12 +294,12 @@ void print_avlTree(struct node *tree)
     }
     else if(!tree->right && !tree->left)
     {
-        fprintf(dotFile, "\t%d [xlabel=\"%d\"];\n", tree->data, avl_node_Balance(tree));
+        fprintf(dotFile, "\t%d;\n", tree->data);
     }
     else
     {
         null_id = 0;
-        print_avlTree_helper(tree, dotFile, &null_id);
+        print_bst_helper(tree, dotFile, &null_id);
     }
 
     // Write the DOT file footer
@@ -447,7 +310,7 @@ void print_avlTree(struct node *tree)
     view_diagram();
 }
 
-void save_avlTree(struct node *tree)
+void save_bst(struct node *tree)
 {
     static int null_id;
     FILE *dotFile = fopen("diagram.dot", "w"); // Open a file to write the DOT representation of the tree
@@ -468,12 +331,12 @@ void save_avlTree(struct node *tree)
     }
     else if(!tree->right && !tree->left)
     {
-        fprintf(dotFile, "\t%d [xlabel=\"%d\"];\n", tree->data, avl_node_Balance(tree));
+        fprintf(dotFile, "\t%d;\n", tree->data);
     }
     else
     {
         null_id = 0;
-        print_avlTree_helper(tree, dotFile, &null_id);
+        print_bst_helper(tree, dotFile, &null_id);
     }
     // Write the DOT file footer
     fprintf(dotFile, "}\n");
@@ -482,7 +345,7 @@ void save_avlTree(struct node *tree)
     save_diagram();
 }
 
-void start_avl_tree_program()
+void startBSTProgram()
 {
     int option, val;
     struct node *tree = NULL;
@@ -491,7 +354,7 @@ void start_avl_tree_program()
     do
     {
         clearScreen();
-        printf("\n ***** AVL tree Visualization Menu *****\n");
+        printf("\n ***** BST Visualization Menu *****\n");
         printf("\n 1.  Insert node");
         printf("\n 2.  Search node");
         printf("\n 3.  Delete node");
@@ -516,7 +379,7 @@ void start_avl_tree_program()
         case 1:
             printf("\n Enter element to insert: ");
             scanf( " %d", &val);
-            tree = avl_insert(tree, val);
+            tree = insert(tree, val);
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
@@ -524,7 +387,7 @@ void start_avl_tree_program()
         case 2:
             printf("\n Enter the value to search for: ");
             scanf(" %d", &val);
-            ptr = avl_search(tree, val);
+            ptr = search(tree, val);
             if(ptr == NULL)
             {
                 printf("\n Element doesn't exist in the BST");
@@ -546,14 +409,14 @@ void start_avl_tree_program()
             }
             else
             {
-                tree = avl_delete_node(tree, val);
+                tree = delete_node(tree, val);
             }
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
             break;
         case 4:
-            val = avl_tree_height(tree);
+            val = heigth(tree);
             if(val)
             {
                 printf("\n Tree height is: %d", val);
@@ -567,7 +430,7 @@ void start_avl_tree_program()
             while (getchar() != '\n');
             break;
         case 5:
-            val = avl_total_nodes(tree);
+            val = total_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d nodes", val);
@@ -581,7 +444,7 @@ void start_avl_tree_program()
             while (getchar() != '\n');
             break;
         case 6:
-            val = avl_total_external_nodes(tree);
+            val = total_external_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d external nodes", val);
@@ -595,7 +458,7 @@ void start_avl_tree_program()
             while (getchar() != '\n');
             break;
         case 7:
-            val = avl_total_internal_nodes(tree);
+            val = total_internal_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d internal nodes", val);
@@ -609,7 +472,7 @@ void start_avl_tree_program()
             while (getchar() != '\n');
             break;
         case 8:
-            tree = avl_mirror_image(tree);
+            tree = mirror_image(tree);
             if(tree != NULL)
             {
                 printf("\n Tree has been mirrored");
@@ -624,7 +487,7 @@ void start_avl_tree_program()
             while (getchar() != '\n');
             break;
         case 9:
-            ptr = avl_findSmallestNode(tree);
+            ptr = findSmallestNode(tree);
             if(ptr == NULL)
             {
                 printf("\n Tree is empty");
@@ -638,7 +501,7 @@ void start_avl_tree_program()
             while (getchar() != '\n');
             break;
         case 10:
-            ptr = avl_findLargestNode(tree);
+            ptr = findLargestNode(tree);
             if(ptr == NULL)
             {
                 printf("\n Tree is empty");
@@ -659,7 +522,7 @@ void start_avl_tree_program()
             else
             {
                 printf("\n Elements in preorder traversal: ");
-                avl_preorder_traversal(tree);
+                preorder_traversal(tree);
                 printf("\n ");
             }
             printf("\n\n Press enter to continue...");
@@ -674,7 +537,7 @@ void start_avl_tree_program()
             else
             {
                 printf("\n Elements in inorder traversal: ");
-                avl_inorder_traversal(tree);
+                inorder_traversal(tree);
                 printf("\n ");
             }
             printf("\n\n Press enter to continue...");
@@ -689,7 +552,7 @@ void start_avl_tree_program()
             else
             {
                 printf("\n Elements in postorder traversal: ");
-                avl_postorder_traversal(tree);
+                postorder_traversal(tree);
                 printf("\n ");
             }
             printf("\n\n Press enter to continue...");
@@ -698,31 +561,31 @@ void start_avl_tree_program()
             break;
         case 14:
             printf("\n Opening image with the default image viewer");
-            print_avlTree(tree);
+            print_bst(tree);
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
             break;
         case 15:
-            save_avlTree(tree);
+            save_bst(tree);
             printf("\n\n Press enter to continue...");
             while (getchar() != '\n');
             break;
         case 16:
-        tree = avl_delete_tree(tree);
-        tree = NULL;
-        if(tree == NULL)
-        {
-            printf("\n Tree has been deleted successfully");
-        }
-        else
-        {
-            printf("\n Unable to delete tree for some reason");
-        }
-        printf("\n\n Press enter to continue...");
-        getchar();
-        while (getchar() != '\n');
-        break;
+            tree = delete_tree(tree);
+            tree = NULL;
+            if(tree == NULL)
+            {
+                printf("\n Tree has been deleted successfully");
+            }
+            else
+            {
+                printf("\n Unable to delete tree for some reason");
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
+            break;
         default:
             printf("\n Returning to main menu...");
             option = 17;

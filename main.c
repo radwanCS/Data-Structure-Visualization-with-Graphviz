@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "utility.h"
-#include "bst.h"
-#include "threaded_bst.h"
-#include "avl_tree.h"
-#include "red_black_tree.h"
-#include "splay_tree.h"
+#include "headers/utility.h"
+#include "headers/bst.h"
+#include "headers/threaded_bst.h"
+#include "headers/avl_tree.h"
+#include "headers/red_black_tree.h"
+#include "headers/splay_tree.h"
 
 void mainMenu()
 {

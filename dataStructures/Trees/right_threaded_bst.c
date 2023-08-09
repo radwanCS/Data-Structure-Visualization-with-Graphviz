@@ -4,158 +4,109 @@
 #include <stdbool.h>
 #include <sys/stat.h>
 
-#include "utility.h"
+#include "../../headers/utility.h"
 
 struct node
 {
     int data;
-    struct node *right;
     struct node *left;
+    struct node *right;
     bool rightThread;
-    bool leftThread;
 };
 
-struct node *dtt_search(struct node *tree, int val)
+struct node *rtt_search(struct node *tree, int val)
 {
-    if(tree == NULL || tree->data == val)
+    if(tree == NULL)
+    {
+        return NULL;
+    }
+    else if(tree->data == val)
     {
         return tree;
     }
-    else if(val < tree->data)
-    {
-        if(tree->leftThread)
-        {
-            return NULL;
-        }
-        else
-        {
-            return dtt_search(tree->left, val);
-        }
-    }
     else
     {
         if(tree->rightThread)
         {
-            return NULL;
+            if(val > tree->data)
+            {
+                return NULL;
+            }
+            else
+            {
+                return rtt_search(tree->left, val);
+            }
         }
         else
         {
-            return dtt_search(tree->right, val);
+            if(val > tree->data)
+            {
+                return rtt_search(tree->right, val);
+            }
+            else
+            {
+                return rtt_search(tree->left, val);
+            }
         }
     }
 };
 
-int dtt_total_nodes(struct node *tree)
-{
-    if(tree == NULL)
-    {
-        return 0;
-    }
-    else
-    {
-        if(tree->rightThread == true && tree->leftThread == true)
-        {
-            return 1;
-        }
-        else if(tree->leftThread == true && tree->rightThread == false)
-        {
-            return dtt_total_nodes(tree->right) + 1;
-        }
-        else if(tree->rightThread == true && tree->leftThread == false)
-        {
-            return dtt_total_nodes(tree->left) + 1;
-        }
-        else
-        {
-            return dtt_total_nodes(tree->left) + dtt_total_nodes(tree->right) + 1;
-        }
-    }
-}
-
-int dtt_total_external_nodes(struct node *tree)
-{
-    if(tree == NULL)
-    {
-        return 0;
-    }
-    else if(tree->rightThread == true && tree->leftThread == true)
-    {
-        return 1;
-    }
-    else
-    {
-        if(tree->rightThread)
-        {
-            return dtt_total_external_nodes(tree->left);
-        }
-        else if(tree->leftThread == true)
-        {
-            return dtt_total_external_nodes(tree->right);
-        }
-        else
-        {
-            return dtt_total_external_nodes(tree->left) + dtt_total_external_nodes(tree->right);
-        }
-    }
-}
-
-int dtt_total_internal_nodes(struct node *tree)
-{
-    if(tree == NULL)
-    {
-        return 0;
-    }
-    else if(tree->leftThread == true && tree->rightThread == true)
-    {
-        return 0;
-    }
-    else
-    {
-        if(tree->leftThread == true)
-        {
-            return dtt_total_internal_nodes(tree->right) + 1;
-        }
-        else if(tree->rightThread == true)
-        {
-            return dtt_total_internal_nodes(tree->left) + 1;
-        }
-        else
-        {
-            return dtt_total_internal_nodes(tree->left) + dtt_total_internal_nodes(tree->right) + 1;
-        }
-    }
-}
-
-struct node *dtt_insucc(struct node *ptr)
+struct node *rtt_inorderSuccessor(struct node *ptr)
 {
     if(ptr->rightThread == true)
     {
         return ptr->right;
     }
     ptr = ptr->right;
-    while(ptr->leftThread == false)
+    while(ptr->left != NULL)
     {
         ptr = ptr->left;
     }
     return ptr;
 };
 
-struct node *dtt_inpred(struct node *ptr)
+struct node *rtt_max(struct node *tree)
 {
-    if(ptr->leftThread == true)
+    while(tree->rightThread != true)
     {
-        return ptr->left;
+        tree = tree->right;
     }
-    ptr = ptr->left;
-    while(ptr->rightThread == false)
-    {
-        ptr = ptr->right;
-    }
-    return ptr;
+    return tree;
 };
 
+struct node *rtt_inorderPred(struct node *tree, struct node *ptr)
+{
+    if(tree == NULL)
+    {
+        return NULL;
+    }
 
-struct node *dtt_delete_caseA(struct node *tree, struct node *parent, struct node *ptr)
+    struct node *pred = NULL;
+    while(tree != NULL)
+    {
+        if(ptr->data < tree->data)
+        {
+            tree = tree->left;
+        }
+        else if(ptr->data > tree->data)
+        {
+            pred = tree;
+            tree = tree->right;
+        }
+        else
+        {
+            if(tree->left != NULL)
+            {
+                pred = rtt_max(tree->left);
+            }
+            break;
+        }
+    }
+
+    return pred;
+};
+
+struct node *caseA(struct node *tree, struct node *parent, struct node *ptr)
 {
     if(parent == NULL)
     {
@@ -163,7 +114,6 @@ struct node *dtt_delete_caseA(struct node *tree, struct node *parent, struct nod
     }
     else if(ptr == parent->left)
     {
-        parent->leftThread = true;
         parent->left = ptr->left;
     }
     else
@@ -175,16 +125,19 @@ struct node *dtt_delete_caseA(struct node *tree, struct node *parent, struct nod
     return tree;
 };
 
-struct node *dtt_delete_caseB(struct node *tree, struct node *parent, struct node *ptr)
+struct node *caseB(struct node *tree, struct node *parent, struct node *ptr)
 {
     struct node *child;
-    if(ptr->leftThread == false)
+    struct node *s = rtt_inorderSuccessor(ptr);
+    struct node *p = rtt_inorderPred(tree, ptr);
+
+    if(ptr->rightThread == false)
     {
-        child = ptr->left;
+        child = ptr->right;
     }
     else
     {
-        child = ptr->right;
+        child = ptr->left;
     }
 
     if(parent == NULL)
@@ -200,10 +153,7 @@ struct node *dtt_delete_caseB(struct node *tree, struct node *parent, struct nod
         parent->right = child;
     }
 
-    struct node *s = dtt_insucc(ptr);
-    struct node *p = dtt_inpred(ptr);
-
-    if(ptr->leftThread == false)
+    if(ptr->left != NULL)
     {
         p->right = s;
     }
@@ -211,54 +161,57 @@ struct node *dtt_delete_caseB(struct node *tree, struct node *parent, struct nod
     {
         if(ptr->rightThread == false)
         {
-            s->left = p;
+            s->left = NULL;
         }
     }
     free(ptr);
     return tree;
 };
 
-struct node *dtt_delete_caseC(struct node *tree, struct node *parent, struct node *ptr)
+struct node *caseC(struct node *tree, struct node *parent, struct node *ptr)
 {
     struct node *parsucc = ptr;
     struct node *succ = ptr->right;
 
-    while(succ->leftThread == false)
+    // Find left most child of successor
+    while(succ->left != NULL)
     {
         parsucc = succ;
         succ = succ->left;
     }
+
     ptr->data = succ->data;
-    if(succ->leftThread == true && succ->rightThread == true)
+
+    if(succ->left == NULL && succ->rightThread == true)
     {
-        tree = dtt_delete_caseA(tree, parsucc, succ);
+        tree = caseA(tree, parsucc, succ);
     }
     else
     {
-        tree = dtt_delete_caseB(tree, parsucc, succ);
+        tree = caseB(tree, parsucc, succ);
     }
     return tree;
+
 };
 
-struct node *delete_dtt_node(struct node *tree, int val)
-{
-    struct node *parent;
-    struct node *ptr = tree;
 
-    int found = 0;
+struct node *delete_rtt_node(struct node *tree, int val)
+{
+    struct node *parent = NULL;
+    struct node *ptr = tree;
+    bool found = false;
 
     while(ptr != NULL)
     {
         if(val == ptr->data)
         {
-            found = 1;
+            found = true;
             break;
         }
         parent = ptr;
-
         if(val < ptr->data)
         {
-            if(ptr->leftThread == false)
+            if(ptr->left != NULL)
             {
                 ptr = ptr->left;
             }
@@ -280,54 +233,45 @@ struct node *delete_dtt_node(struct node *tree, int val)
         }
     }
 
-    if(found == 0)
+    if(found == false)
     {
-        printf("Value not present in the tree \n");
+        printf(" value not present in tree\n");
     }
-    else if(ptr->leftThread == false && ptr->rightThread == false)
+    else if(ptr->left != NULL && ptr->rightThread == false)
     {
-        tree = dtt_delete_caseC(tree, parent, ptr);
+        tree = caseC(tree, parent, ptr);
     }
-    else if(ptr->leftThread == false)
+    else if(ptr->left != NULL && ptr->rightThread == true)
     {
-        tree = dtt_delete_caseB(tree, parent, ptr);
+        tree = caseB(tree, parent, ptr);
     }
-    else if(ptr->rightThread == false)
+    else if(ptr->left == NULL && ptr->rightThread == false)
     {
-        tree = dtt_delete_caseB(tree, parent, ptr);
+        tree = caseB(tree, parent, ptr);
     }
     else
     {
-        tree = dtt_delete_caseA(tree, parent, ptr);
+        tree = caseA(tree, parent, ptr);
     }
     return tree;
 }
 
-struct node *dtt_insert(struct node *tree, int val)
+struct node *rtt_insert(struct node *tree, int val)
 {
     struct node *ptr = tree;
     struct node *parent = NULL;
 
     while(ptr != NULL)
     {
-        if(val == ptr->data)
+        if(ptr->data == val)
         {
             printf("Duplicate Key !\n");
             return tree;
         }
+
         parent = ptr;
-        if(val < ptr->data)
-        {
-            if(ptr->leftThread == false)
-            {
-                ptr = ptr->left;
-            }
-            else
-            {
-                break;
-            }
-        }
-        else
+
+        if(val > ptr->data)
         {
             if(ptr->rightThread == false)
             {
@@ -338,88 +282,53 @@ struct node *dtt_insert(struct node *tree, int val)
                 break;
             }
         }
+        else
+        {
+            ptr = ptr->left;
+        }
     }
 
-    struct node *new_node = (struct node *)malloc(sizeof(struct node));
+    struct node *new_node;
+    new_node = (struct node *)malloc(sizeof(struct node));
     new_node->data = val;
-    new_node->leftThread = true;
+    new_node->left = new_node->right = NULL;
     new_node->rightThread = true;
 
     if(parent == NULL)
     {
         tree = new_node;
-        new_node->left = NULL;
-        new_node->right = NULL;
+        tree->left = NULL;
+        tree->right = NULL;
     }
     else if(val < parent->data)
     {
-        new_node->left = parent->left;
         new_node->right = parent;
-        parent->leftThread = false;
         parent->left = new_node;
     }
     else
     {
-        new_node->left = parent;
         new_node->right = parent->right;
         parent->rightThread = false;
         parent->right = new_node;
     }
+
     return tree;
 };
 
-struct node *dtt_leftMost(struct node *n)
+struct node *rtt_leftMost(struct node *n)
 {
     if(n == NULL)
     {
         return NULL;
     }
-    while(n->leftThread == false)
+    while(n->left != NULL)
     {
         n = n->left;
     }
     return n;
 };
 
-void dtt_inorder_traversal(struct node *tree)
-{
-    struct node *ptr = dtt_leftMost(tree);
-    while(ptr != NULL)
-    {
-        printf("%d ", ptr->data);
-        if(ptr->rightThread)
-        {
-            ptr = ptr->right;
-        }
-        else
-        {
-            ptr = dtt_leftMost(ptr->right);
-        }
-    }
-}
-
-struct node *dtt_delete_tree(struct node *tree)
-{
-    struct node *ptr = dtt_leftMost(tree);
-    struct node *prev;
-    while(ptr != NULL)
-    {
-        prev = ptr;
-        if(ptr->rightThread)
-        {
-            ptr = ptr->right;
-        }
-        else
-        {
-            ptr = dtt_leftMost(ptr->right);
-        }
-        free(prev);
-    }
-    tree = NULL;
-    return tree;
-};
-
-int dtt_height(struct node *node)
+int rtt_height(struct node *node)
 {
     if(node == NULL)
     {
@@ -427,17 +336,8 @@ int dtt_height(struct node *node)
     }
     else
     {
-        int lheight;
+        int lheight = rtt_height(node->left);
         int rheight;
-
-        if(node->leftThread)
-        {
-            lheight = 0;
-        }
-        else
-        {
-            lheight = dtt_height(node->left);
-        }
 
         if(node->rightThread)
         {
@@ -445,7 +345,7 @@ int dtt_height(struct node *node)
         }
         else
         {
-            rheight = dtt_height(node->right);
+            rheight = rtt_height(node->right);
         }
 
         if(lheight > rheight)
@@ -459,7 +359,108 @@ int dtt_height(struct node *node)
     }
 }
 
-void write_current_level_dtt_nodes(struct node *tree, int level, FILE *dotFile)
+int rtt_total_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        if(tree->rightThread == true)
+        {
+            return rtt_total_nodes(tree->left) + 1;
+        }
+        else
+        {
+            return rtt_total_nodes(tree->left) + rtt_total_nodes(tree->right) + 1;
+        }
+    }
+}
+
+int rtt_total_external_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else if(tree->left == NULL && tree->rightThread == true)
+    {
+        return 1;
+    }
+    else
+    {
+        if(tree->rightThread == true)
+        {
+            return rtt_total_external_nodes(tree->left);
+        }
+        else
+        {
+            return rtt_total_external_nodes(tree->left) + rtt_total_external_nodes(tree->right);
+        }
+    }
+}
+
+int rtt_total_internal_nodes(struct node *tree)
+{
+    if(tree == NULL)
+    {
+        return 0;
+    }
+    else if(tree->left == NULL && tree->rightThread == true)
+    {
+        return 0;
+    }
+    else
+    {
+        if(tree->rightThread == true)
+        {
+            return rtt_total_internal_nodes(tree->left) + 1;
+        }
+        else
+        {
+            return rtt_total_internal_nodes(tree->left) + rtt_total_internal_nodes(tree->right) + 1;
+        }
+    }
+}
+
+void rtt_inorder_traversal(struct node *tree)
+{
+    struct node *cur = rtt_leftMost(tree);
+    while (cur != NULL)
+    {
+        printf("%d ", cur->data);
+        if (cur->rightThread)
+        {
+            cur = cur->right;
+        }
+        else
+        {
+            cur = rtt_leftMost(cur->right);
+        }
+    }
+}
+
+struct node *rtt_delete_tree(struct node *tree)
+{
+    if(tree != NULL)
+    {
+        if(tree->rightThread)
+        {
+            rtt_delete_tree(tree->left);
+            free(tree);
+        }
+        else
+        {
+            rtt_delete_tree(tree->left);
+            rtt_delete_tree(tree->right);
+            free(tree);
+        }
+    }
+    return tree;
+}
+
+void write_current_level_rtt_nodes(struct node *tree, int level, FILE *dotFile)
 {
     if(tree == NULL)
     {
@@ -487,25 +488,26 @@ void write_current_level_dtt_nodes(struct node *tree, int level, FILE *dotFile)
     }
     else if(level > 1)
     {
-        write_current_level_dtt_nodes(tree->left, level - 1, dotFile);
-        write_current_level_dtt_nodes(tree->right, level - 1, dotFile);
+        write_current_level_rtt_nodes(tree->left, level - 1, dotFile);
+        write_current_level_rtt_nodes(tree->right, level - 1, dotFile);
     }
 }
 
-void generate_dtt_nodes(struct node *tree, FILE *dotFile)
+void generate_rtt_nodes(struct node *tree, FILE *dotFile)
 {
-    int h = dtt_height(tree);
+    int h = rtt_height(tree);
     int i;
     for(i = 1; i <= h; i++)
     {
-        write_current_level_dtt_nodes(tree, i, dotFile);
+        write_current_level_rtt_nodes(tree, i, dotFile);
     }
 }
 
-void print_dtt_helper(struct node *tree, FILE *dotFile, int *null_id)
+void print_rtt_helper(struct node *tree, FILE *dotFile, int *null_id)
 {
     // Recursively using Preorder traversal write the DOT representation of each node in the tree
-    struct node *ptr = dtt_leftMost(tree);
+
+    struct node *ptr = rtt_leftMost(tree);
     while(ptr != NULL)
     {
         if(ptr->left)
@@ -536,12 +538,12 @@ void print_dtt_helper(struct node *tree, FILE *dotFile, int *null_id)
         }
         else
         {
-            ptr = dtt_leftMost(ptr->right);
+            ptr = rtt_leftMost(ptr->right);
         }
     }
 }
 
-void print_dtt(struct node *tree)
+void print_rtt(struct node *tree)
 {
     static int null_id;
 
@@ -553,7 +555,7 @@ void print_dtt(struct node *tree)
     }
 
     // Write the DOT file header
-    fprintf(dotFile, "digraph LTBT{\n");
+    fprintf(dotFile, "digraph RTBT{\n");
     fprintf(dotFile, "\tnode [fontname=\"Arial\", shape=record, height=0.5, width=1.5];\n");
 
     //Check if the tree is empty
@@ -568,8 +570,8 @@ void print_dtt(struct node *tree)
     else
     {
         null_id = 0;
-        generate_dtt_nodes(tree, dotFile);
-        print_dtt_helper(tree, dotFile, &null_id);
+        generate_rtt_nodes(tree, dotFile);
+        print_rtt_helper(tree, dotFile, &null_id);
     }
 
     // Write the DOT file footer
@@ -580,7 +582,7 @@ void print_dtt(struct node *tree)
     view_diagram();
 }
 
-void save_dtt(struct node *tree)
+void save_rtt(struct node *tree)
 {
     static int null_id;
     FILE *dotFile = fopen("diagram.dot", "w"); // Open a file to write the DOT representation of the tree
@@ -606,8 +608,8 @@ void save_dtt(struct node *tree)
     else
     {
         null_id = 0;
-        generate_dtt_nodes(tree, dotFile);
-        print_dtt_helper(tree, dotFile, &null_id);
+        generate_rtt_nodes(tree, dotFile);
+        print_rtt_helper(tree, dotFile, &null_id);
     }
     // Write the DOT file footer
     fprintf(dotFile, "}\n");
@@ -617,8 +619,7 @@ void save_dtt(struct node *tree)
     save_diagram();
 }
 
-
-void start_double_threaded_bst_program()
+void start_rthreaded_tree_program()
 {
     int option, val;
     struct node *tree = NULL;
@@ -627,7 +628,7 @@ void start_double_threaded_bst_program()
     do
     {
         clearScreen();
-        printf("\n ***** Left-Threaded BST Visualization Menu *****\n");
+        printf("\n ***** Right-Threaded BST Visualization Menu *****\n");
         printf("\n 1.  Insert node");
         printf("\n 2.  Search node");
         printf("\n 3.  Delete node");
@@ -646,8 +647,8 @@ void start_double_threaded_bst_program()
         {
         case 1:
             printf("\n Enter element to insert: ");
-            scanf(" %d", &val);
-            tree = dtt_insert(tree, val);
+            scanf( " %d", &val);
+            tree = rtt_insert(tree, val);
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
@@ -655,7 +656,7 @@ void start_double_threaded_bst_program()
         case 2:
             printf("\n Enter the value to search for: ");
             scanf(" %d", &val);
-            ptr = dtt_search(tree, val);
+            ptr = rtt_search(tree, val);
             if(ptr == NULL)
             {
                 printf("\n Element doesn't exist in the BST");
@@ -677,7 +678,7 @@ void start_double_threaded_bst_program()
             }
             else
             {
-                tree = delete_dtt_node(tree, val);
+                tree = delete_rtt_node(tree, val);
             }
             printf("\n Element have been deleted");
             printf("\n\n Press enter to continue...");
@@ -685,7 +686,7 @@ void start_double_threaded_bst_program()
             while (getchar() != '\n');
             break;
         case 4:
-            val = dtt_height(tree);
+            val = rtt_height(tree);
             if(val)
             {
                 printf("\n Tree height is: %d", val);
@@ -699,7 +700,7 @@ void start_double_threaded_bst_program()
             while (getchar() != '\n');
             break;
         case 5:
-            val = dtt_total_nodes(tree);
+            val = rtt_total_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d nodes", val);
@@ -713,7 +714,7 @@ void start_double_threaded_bst_program()
             while (getchar() != '\n');
             break;
         case 6:
-            val = dtt_total_external_nodes(tree);
+            val = rtt_total_external_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d external nodes", val);
@@ -727,14 +728,14 @@ void start_double_threaded_bst_program()
             while (getchar() != '\n');
             break;
         case 7:
-            val = dtt_total_internal_nodes(tree);
+            val = rtt_total_internal_nodes(tree);
             if(val)
             {
                 printf("\n Tree has total of %d internal nodes", val);
             }
             else
             {
-                printf("\n Tree is empty or has single node hence has 0 internal nodes");
+                printf("\n Tree is empty hence has 0 internal nodes");
             }
             printf("\n\n Press enter to continue...");
             getchar();
@@ -747,8 +748,8 @@ void start_double_threaded_bst_program()
             }
             else
             {
-                printf("\n Elements in Inorder traversal: ");
-                dtt_inorder_traversal(tree);
+                printf("\n Elements in inorder traversal: ");
+                rtt_inorder_traversal(tree);
                 printf("\n ");
             }
             printf("\n\n Press enter to continue...");
@@ -757,18 +758,19 @@ void start_double_threaded_bst_program()
             break;
         case 9:
             printf("\n Opening image with the default image viewer");
-            print_dtt(tree);
+            print_rtt(tree);
             printf("\n\n Press enter to continue...");
             getchar();
             while (getchar() != '\n');
             break;
         case 10:
-            save_dtt(tree);
+            save_rtt(tree);
             printf("\n\n Press enter to continue...");
             while (getchar() != '\n');
             break;
         case 11:
-            tree = dtt_delete_tree(tree);
+            tree = rtt_delete_tree(tree);
+            tree = NULL;
             if(tree == NULL)
             {
                 printf("\n Tree has been deleted successfully");
@@ -788,4 +790,4 @@ void start_double_threaded_bst_program()
         }
     }
     while(option != 12);
-}
+};

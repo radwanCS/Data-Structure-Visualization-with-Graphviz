@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "utility.h"
-#include "r_threaded_bst.h"
-#include "left_threaded_bst.h"
-#include "double_threaded_bst.h"
+#include "../../headers/utility.h"
+#include "../../headers/r_threaded_bst.h"
+#include "../../headers/left_threaded_bst.h"
+#include "../../headers/double_threaded_bst.h"
 
 void threaded_tree_menu()
 {
