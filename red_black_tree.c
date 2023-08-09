@@ -356,7 +356,7 @@ void save_redBlackTree(struct node *tree)
     }
 
     // Write the DOT file header
-    fprintf(dotFile, "digraph BST {\n");
+    fprintf(dotFile, "digraph RBT{\n");
     fprintf(dotFile, "\tnode [fontname=\"Arial\", shape=circle, fontcolor=white];\n");
 
     //Check if the tree is empty

@@ -6,6 +6,8 @@
 #include "bst.h"
 #include "threaded_bst.h"
 #include "avl_tree.h"
+#include "red_black_tree.h"
+#include "splay_tree.h"
 
 void mainMenu()
 {
@@ -30,8 +32,9 @@ void treeMenu()
         printf("\n 2. Threaded Binary Tree");
         printf("\n 3. AVL Tree");
         printf("\n 4. Red Black Tree");
-        printf("\n 5. Return to main menu");
-        printf("\n\n Select option (1-5): ");
+        printf("\n 5. Splay Tree");
+        printf("\n 6. Return to main menu");
+        printf("\n\n Select option (1-6): ");
         scanf(" %d", &option);
         switch(option)
         {
@@ -48,10 +51,13 @@ void treeMenu()
             start_redBlackTree_program();
             break;
         case 5:
-            option = 5;
+            start_splay_tree_program();
+            break;
+        case 6:
+            option = 6;
             break;
         default:
-            option = 5;
+            option = 6;
             printf("\n Invalid input!");
             break;
         }

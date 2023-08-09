@@ -31,18 +31,10 @@
 	<sys/stat.h>
 	"utility.h"
 
-1691426978 source:/media/radwan/d/Projects/Data Structure Viz/main.c
+1691570709 source:/media/radwan/d/Projects/Data Structure Viz/red_black_tree.c
 	<stdio.h>
 	<stdlib.h>
-	<ctype.h>
 	"utility.h"
-	"bst.h"
-	"threaded_bst.h"
-	"avl_tree.h"
-
-1690186597 /media/radwan/d/Projects/Data Structure Viz/threaded_bst.h
-
-1691312848 /media/radwan/d/Projects/Data Structure Viz/avl_tree.h
 
 1690610696 source:/media/radwan/d/Projects/Data Structure Viz/right_threaded_bst.c
 	<stdio.h>
@@ -50,6 +42,11 @@
 	<string.h>
 	<stdbool.h>
 	<sys/stat.h>
+	"utility.h"
+
+1691570733 source:/media/radwan/d/Projects/Data Structure Viz/splay_tree.c
+	<stdio.h>
+	<stdlib.h>
 	"utility.h"
 
 1690877798 source:/media/radwan/d/Projects/Data Structure Viz/threaded_bst.c
@@ -72,8 +69,22 @@
 	<string.h>
 	<sys/stat.h>
 
-1691561535 source:/media/radwan/d/Projects/Data Structure Viz/red_black_tree.c
+1691567538 source:/media/radwan/d/Projects/Data Structure Viz/main.c
 	<stdio.h>
 	<stdlib.h>
+	<ctype.h>
 	"utility.h"
+	"bst.h"
+	"threaded_bst.h"
+	"avl_tree.h"
+	"red_black_tree.h"
+	"splay_tree.h"
+
+1690186597 /media/radwan/d/Projects/Data Structure Viz/threaded_bst.h
+
+1691312848 /media/radwan/d/Projects/Data Structure Viz/avl_tree.h
+
+1691426964 /media/radwan/d/Projects/Data Structure Viz/red_black_tree.h
+
+1691563447 /media/radwan/d/Projects/Data Structure Viz/splay_tree.h
 

@@ -1,17 +1,13 @@
-digraph BST {
-	node [fontname="Arial", shape=circle, fontcolor=white];
-	4 [color = black, style=filled, fillcolor = gray33];
-	3 [color=red, style=filled, fillcolor=tomato];
-	4 -> 3;
-	4 [color = black, style = filled, fillcolor = gray33];
-	5 [color = red, style=filled, fillcolor = tomato];
-	4 -> 5;
-	NULL1 [label="NULL" shape=rectangle, color = black, style = filled, fillcolor = gray33];
-	3 -> NULL1;
-	NULL2 [label="NULL" shape=rectangle, color = black, style = filled, fillcolor = gray33];
-	3 -> NULL2;
-	NULL3 [label="NULL" shape=rectangle, color = black, style = filled, fillcolor = gray33];
-	5 -> NULL3;
-	NULL4 [label="NULL" shape=rectangle, color = black, style = filled, fillcolor = gray33];
-	5 -> NULL4;
+digraph "Splay Tree" {
+	node [fontname="Arial", shape=circle];
+	NULL1 [shape=rectangle, style = invis];
+	3 -> NULL1 [style=invis];
+	3 -> 15;
+	15 -> 10;
+	NULL2 [shape=rectangle, style = invis];
+	15 -> NULL2 [style=invis];
+	NULL3 [shape=rectangle, style = invis];
+	10 -> NULL3 [style=invis];
+	NULL4 [shape=rectangle, style = invis];
+	10 -> NULL4 [style=invis];
 }
