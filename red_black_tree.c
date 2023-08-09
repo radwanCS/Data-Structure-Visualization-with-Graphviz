@@ -178,6 +178,7 @@ struct node *insert_redBlackTree(struct node *tree, struct node *new_node)
 
 struct node *delete_node_redBlackTree(struct node *tree, int val)
 {
+    printf("Feature not implemented yet");
     return tree;
 };
 
@@ -234,6 +235,12 @@ void postorder_redBlackTree(struct node *tree)
 
 struct node *delete_redBlackTree(struct node *tree)
 {
+    if(tree != NULL)
+    {
+        delete_redBlackTree(tree->left);
+        delete_redBlackTree(tree->right);
+        free(tree);
+    }
     return tree;
 };
 
@@ -350,7 +357,7 @@ void save_redBlackTree(struct node *tree)
 
     // Write the DOT file header
     fprintf(dotFile, "digraph BST {\n");
-    fprintf(dotFile, "\tnode [fontname=\"Arial\", shape=circle];\n");
+    fprintf(dotFile, "\tnode [fontname=\"Arial\", shape=circle, fontcolor=white];\n");
 
     //Check if the tree is empty
     if(!tree)
@@ -418,9 +425,20 @@ void start_redBlackTree_program()
             }
             break;
         case 2:
-            printf("\n Enter the node value to delete: ");
+            printf("\n Enter element to delete: ");
             scanf(" %d", &val);
-            tree = delete_node_redBlackTree(tree, val);
+            if(tree == NULL)
+            {
+                printf("\n Tree is empty");
+            }
+            else
+            {
+                printf("\n Feature not implemented yet!");
+                //tree = delete_node_redBlackTree(tree, val);
+            }
+            printf("\n\n Press enter to continue...");
+            getchar();
+            while (getchar() != '\n');
             break;
         case 3:
             if(tree == NULL)
